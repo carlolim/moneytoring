@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/moneytoring/static/js/runtime~main.9062f253.js"
   },
   {
-    "revision": "114bbe7069df7520f935",
-    "url": "/moneytoring/static/js/main.114bbe70.chunk.js"
+    "revision": "61ee49849b6599b38556",
+    "url": "/moneytoring/static/js/main.61ee4984.chunk.js"
   },
   {
     "revision": "fe81cedef25f68d97d40",
     "url": "/moneytoring/static/js/1.fe81cede.chunk.js"
   },
   {
-    "revision": "114bbe7069df7520f935",
+    "revision": "61ee49849b6599b38556",
     "url": "/moneytoring/static/css/main.0a1440a2.chunk.css"
   },
   {
-    "revision": "4b24671ad0cbbd7f5d52ad7204ff5436",
+    "revision": "7b40410849e0f4923d7bc0470c54fc13",
     "url": "/moneytoring/index.html"
   }
 ];
