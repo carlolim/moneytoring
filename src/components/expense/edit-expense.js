@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Toolbar from "../common/toolbar";
 import moment from "moment";
+import ModalDanger from "../common/modal-danger";
 
 class EditExpense extends Component {
     constructor(props) {
@@ -26,13 +27,18 @@ class EditExpense extends Component {
 
     loadExpense = (id, component) => {
         const requestDatabase = indexedDB.open("Moneytoring");
-        requestDatabase.onsuccess = function (event) {
+        requestDatabase.onsuccess = (event) => {
             var db = event.target.result;
             var transaction = db.transaction(["expense"], "readonly");
     
             var store = transaction.objectStore("expense");
             var select = store.get(id);
-            transaction.oncomplete = function (event) {
+
+            transaction.oncomplete = (event) => {
+                if (!select.result){
+                    this.props.history.push("/expense");
+                    return;
+                }
                 component.setState({
                     ...component.state,
                     title: select.result.title,
@@ -134,6 +140,23 @@ class EditExpense extends Component {
         }
     }
 
+    handleDelete = () => {
+        const requestDatabase = indexedDB.open("Moneytoring");
+        requestDatabase.onsuccess = (event) => {
+            var db = event.target.result;
+            var transaction = db.transaction("expense", "readwrite");
+            var store = transaction.objectStore("expense");
+            store.delete(this.state.expenseId);
+            console.log(1);
+            transaction.oncomplete = (event) => {
+                window.$('#modalDanger').on('hidden.bs.modal', () => {
+                    this.props.history.push("/expense");
+                });
+                window.$("#modalDanger").modal('hide');
+            }
+        }
+    }
+
     render() {
       return (
         <div>
@@ -141,6 +164,7 @@ class EditExpense extends Component {
                 showBackButton={true}
                 title="Edit expense"
                 buttons={[
+                    (<button data-toggle="modal" data-target="#modalDanger" onClick={() => {}}><i className="fas fa-trash-alt"></i></button>),
                     (<button onClick={this.handleSave.bind(this)}><i className="fas fa-save"></i></button>)
                 ]}
             />
@@ -172,6 +196,7 @@ class EditExpense extends Component {
                     </div>
                 </div>
             </div>
+            <ModalDanger title="Confirm" body="Are you sure you want to delete this?" callback={this.handleDelete.bind(this)} />
         </div>
       );
     }
