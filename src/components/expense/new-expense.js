@@ -9,7 +9,7 @@ class NewExpense extends Component {
             title: '',
             categoryId: 0,
             amount: '',
-            accountId: 0,
+            accountId: 1,
             description: '',
             date: moment().format('YYYY-MM-DD[T]HH:mm'),
             accounts: [],
@@ -120,27 +120,33 @@ class NewExpense extends Component {
             <div className="content">
                 <div className="p-3">
                     <div className="form-group">
+                        <label>Account:</label>
                         <select ref="account" className="form-control" value={this.state.accountId} onChange={this.handleChangeProperty.bind(this, 'accountId')}>
                             <option>-select account-</option>
                             {this.state.accounts.map(item => <option key={item.accountId} value={item.accountId}>{item.name}</option>)}
                         </select>
                     </div>
                     <div className="form-group">
+                        <label>Title:</label>
                         <input placeholder="Title" type="text" ref="title" className="form-control" value={this.state.title} onChange={this.handleChangeProperty.bind(this, 'title')} />
                     </div>
                     <div className="form-group">
+                        <label>Amount:</label>
                         <input placeholder="Amount" onBlur={this.formatCurrency.bind(this)} ref="amount" type="text" className="form-control text-right" value={this.state.amount} onChange={this.handleChangeProperty.bind(this, 'amount')} />
                     </div>
                     <div className="form-group">
+                        <label>Category:</label>
                         <select className="form-control" value={this.state.categoryId} onChange={this.handleChangeProperty.bind(this, 'categoryId')}>
                             <option>-select category-</option>
                             {this.state.categories.map(item => <option key={item.categoryId} value={item.categoryId}>{item.name}</option>)}
                         </select>
                     </div>
                     <div className="form-group">
+                        <label>Date:</label>
                         <input placeholder="Date" type="datetime-local" ref="date" className="form-control" value={this.state.date} onChange={this.handleChangeProperty.bind(this, 'date')} />
                     </div>
                     <div className="form-group">
+                        <label>Notes:</label>
                         <textarea placeholder="Description" rows="5" className="form-control" value={this.state.description} onChange={this.handleChangeProperty.bind(this, 'description')}></textarea>
                     </div>
                 </div>

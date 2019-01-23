@@ -14,7 +14,7 @@ const configureHistory = () => {
 const history = configureHistory();
 initialize(); //initialize database
 ReactDOM.render((
-    <Router history={history} basename="/moneytoring/">
+    <Router history={history} basename={process.env.PUBLIC_URL}>
         <App />
     </Router>
 ), document.getElementById('root'));
