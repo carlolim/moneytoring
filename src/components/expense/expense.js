@@ -29,10 +29,10 @@ class Expense extends Component {
     loadExpenses = (from, to) => {
       console.log(from, to);
       if (from.month() === to.month() && from.date() === to.date() && from.year() === to.year()){
-        this.setState({...this.state, expenses: [], currentFilter: from.format('MMM DD')});
+        this.setState({...this.state, expenses: [], currentFilter: from.format('MMM DD'), total: 0});
       }
       else {
-        this.setState({...this.state, expenses: [], currentFilter: from.format('MMM DD') + ' - ' + to.format('MMM DD')});
+        this.setState({...this.state, expenses: [], currentFilter: from.format('MMM DD') + ' - ' + to.format('MMM DD'), total: 0});
       }
       var range = null;
       if (from && to) {

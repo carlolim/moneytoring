@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import "./animate.css";
 import './App.css';
 import Main from './components/common/main';
 import Navigation from './components/common/navigation';
