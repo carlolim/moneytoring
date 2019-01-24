@@ -30,6 +30,7 @@ a:focus {
     width: 100%;
     justify-content: flex-start;
     height: 52px;
+    z-index: 3;
 }
 
 .navbar button {
