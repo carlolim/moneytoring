@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import FloatingActionButton from '../common/floating-action-button';
 import { withRouter, Link } from 'react-router-dom';
 import './expense.css';
-import Toolbar from "../common/toolbar";
+import Toolbar from "../common/my-toolbar";
 import Filter from "../common/filter";
 import moment from "moment";
-
-const AddButton = withRouter(({ history }) => (
-    <FloatingActionButton callback={() => { history.push('/expense/new') }} />
-))
+import { formatMoney } from "../../helpers";
 
 class Expense extends Component {
     constructor (props) {
@@ -27,7 +23,6 @@ class Expense extends Component {
     }
 
     loadExpenses = (from, to) => {
-      console.log(from, to);
       if (from.month() === to.month() && from.date() === to.date() && from.year() === to.year()){
         this.setState({...this.state, expenses: [], currentFilter: from.format('MMM DD'), total: 0});
       }
@@ -68,17 +63,16 @@ class Expense extends Component {
           />
           <div className="content">
             <div className="under-toolbar-message text-center pt-1">
-              {this.state.currentFilter}<br/><small>{window.formatMoney(this.state.total)}</small>
+              {this.state.currentFilter}<br/><small>{formatMoney(this.state.total)}</small>
             </div>
             <div className="expenses-holder">
                 {this.state.expenses.map(item =>
                   <Link key={item.expenseId} className="list-item d-block" to={'/expense/edit/' + item.expenseId}>
                     {item.title}
-                    <small className="float-right">{window.formatMoney(item.amount)}</small>
+                    <small className="float-right">{formatMoney(item.amount)}</small>
                   </Link>
                 )}
                 {this.state.expenses.length === 0 ? <p className="text-center mt-5">Wow! no expenses!</p> : null}
-                <AddButton />
             </div>
           </div>
           <Filter applyFilter={this.loadExpenses.bind(this)} />

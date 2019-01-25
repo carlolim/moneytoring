@@ -1,8 +1,27 @@
 import React, { Component } from 'react';
-import Toolbar from "../common/toolbar";
-import FloatingActionButton from '../common/floating-action-button';
-import DashboardMenu from './dashboard-menu';
-import ExpenseSummary from "./widgets/expense-summary";
+import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
+import AttachMoneyICon from "@material-ui/icons/AttachMoney";
+import MoneyOffIcon from "@material-ui/icons/MoneyOff";
+import Backdrop from '@material-ui/core/Backdrop';
+
+
+const styles = {
+  fabPrimary: {
+    position: 'absolute', bottom: '15px', right: '15px'
+  },
+  fabExpense: {
+    position: 'absolute', bottom: '150px',  right: '23px'
+  },
+  fabIncome: {
+    position: 'absolute',bottom: '90px', right: '23px'
+  },
+  labelExpense: {
+
+  }
+}
 
 class Dashboard extends Component {
     constructor(props) {
@@ -14,26 +33,29 @@ class Dashboard extends Component {
       this.setState({...this.state, showMenu: !this.state.showMenu});
     }
 
-    newExpense() {
+    newExpense = () => {
         this.props.history.push('/expense/new');
     }
 
     render() {
       return (
         <div>
-            <Toolbar title="moneytoring" />
-            <div className="content">
-              <div className="p-2">
-                <ExpenseSummary />
-              </div>
+            <MyToolbarWithNavigation title="moneytoring" buttons={[]} />
 
-              <FloatingActionButton 
-                className={this.state.showMenu ? "animated rubberBand" : ''}
-                callback={this.toggleMenu.bind(this)}
-                icon={this.state.showMenu ? <i className="fas fa-times"></i> : <i className="fas fa-plus"></i>}
-              />
-              {this.state.showMenu ? <DashboardMenu newExpense={this.newExpense.bind(this)} /> : null}
-            </div>
+            {this.state.showMenu ? 
+              <>
+                <Fab onClick={this.newExpense} className="animated jello" color="default" size="small" aria-label="expense" style={styles.fabExpense}>
+                  <MoneyOffIcon />
+                </Fab>
+                <Fab className="animated jello" color="default" size="small" aria-label="income" style={styles.fabIncome}>
+                  <AttachMoneyICon />
+                </Fab>
+              </>
+            : null }
+            <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" style={styles.fabPrimary}>
+              {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
+            </Fab>
+            <Backdrop onClick={this.toggleMenu} open={this.state.showMenu} />
         </div>
       );
     }

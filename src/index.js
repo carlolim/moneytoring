@@ -5,6 +5,9 @@ import * as serviceWorker from './serviceWorker';
 import { Router } from 'react-router-dom';
 import { initialize } from './database';
 import { createBrowserHistory, createHashHistory } from 'history';
+import "./animate.css";
+import './App.css';
+import 'typeface-roboto';
 
 const configureHistory = () => {
   return window.matchMedia('(display-mode: standalone)').matches

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Toolbar from "../common/toolbar";
+import Toolbar from "../common/my-toolbar";
 import moment from "moment";
+import { formatMoney } from "../../helpers";
 import ModalDanger from "../common/modal-danger";
 
 class EditExpense extends Component {
@@ -43,7 +44,7 @@ class EditExpense extends Component {
                     ...component.state,
                     title: select.result.title,
                     categoryId: select.result.categoryId,
-                    amount: window.formatMoney(select.result.amount),
+                    amount: formatMoney(select.result.amount),
                     accountId: select.result.accountId,
                     description: select.result.description,
                     date: moment(select.result.date).format('YYYY-MM-DD[T]HH:mm')
@@ -90,7 +91,7 @@ class EditExpense extends Component {
     }
 
     formatCurrency (e) {
-        let value = window.formatMoney(this.state.amount);
+        let value = formatMoney(this.state.amount);
         this.setState({...this.state, "amount": value});
     }
 
