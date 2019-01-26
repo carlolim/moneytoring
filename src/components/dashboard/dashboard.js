@@ -17,9 +17,6 @@ const styles = {
   },
   fabIncome: {
     position: 'absolute',bottom: '90px', right: '23px'
-  },
-  labelExpense: {
-
   }
 }
 
@@ -41,7 +38,6 @@ class Dashboard extends Component {
       return (
         <div>
             <MyToolbarWithNavigation title="moneytoring" buttons={[]} />
-
             {this.state.showMenu ? 
               <>
                 <Fab onClick={this.newExpense} className="animated jello" color="default" size="small" aria-label="expense" style={styles.fabExpense}>
@@ -50,7 +46,7 @@ class Dashboard extends Component {
                 <Fab className="animated jello" color="default" size="small" aria-label="income" style={styles.fabIncome}>
                   <AttachMoneyICon />
                 </Fab>
-                <Backdrop onClick={this.toggleMenu} open="true" />
+                <Backdrop onClick={this.toggleMenu} open={true} />
               </>
             : null }
             <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" style={styles.fabPrimary}>

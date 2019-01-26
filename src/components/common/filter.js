@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
 import moment from "moment";
+import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 
 class Filter extends Component {
     constructor(props) {
@@ -21,6 +30,14 @@ class Filter extends Component {
             custom: {
                 from: '',
                 to:''
+            },
+            errors: {
+                daily: false,
+                weekly: false,
+                monthly: false,
+                yearly: false,
+                from: false,
+                to: false
             }
         }
     }
@@ -36,11 +53,20 @@ class Filter extends Component {
     handleApply = () => {
         let startDate = new Date();
         let endDate = new Date();
+        let errors = {
+            daily: false,
+            weekly: false,
+            monthly: false,
+            yearly: false,
+            from: false,
+            to: false
+        };
+        let hasError = false;
         switch(this.state.viewType) {
             case 'daily':
                 if(this.state.daily.date === '') {
-                    alert ('Select date');
-                    return;
+                    hasError = true;
+                    errors.daily = true;
                 }
                 else {
                     startDate = moment(this.state.daily.date).hours(0).minutes(0).seconds(0);
@@ -49,8 +75,8 @@ class Filter extends Component {
                 break;
             case 'weekly':
                 if (this.state.weekly.week === '') {
-                    alert('Select week');
-                    return;
+                    hasError = true;
+                    errors.weekly = true;
                 }
                 else {
                     let weekParts = this.state.weekly.week.split('-');
@@ -61,8 +87,8 @@ class Filter extends Component {
                 break;
             case 'monthly':
                 if (this.state.monthly.month === '') {
-                    alert('Select month');
-                    return;
+                    hasError = true;
+                    errors.monthly = true;
                 }
                 else {
                     let monthParts = this.state.monthly.month.split('-');
@@ -72,8 +98,8 @@ class Filter extends Component {
                 break;
             case 'yearly':
                 if (this.state.yearly.year === '' || isNaN(this.state.yearly.year)) {
-                    alert('Select year');
-                    return;
+                    hasError = true;
+                    errors.yearly = true;
                 }
                 else {
                     let year = Number(this.state.yearly.year);
@@ -83,85 +109,120 @@ class Filter extends Component {
                 break;
            default: //custom range
                 if(this.state.custom.from === ''){
-                    alert('Select date from');
-                    return;
+                    hasError = true;
+                    errors.from = true;
                 }
                 else if(this.state.custom.to === '') {
-                    alert('Selecte date to');
-                    return;
+                    hasError = true;
+                    errors.to = true;
                 }
                 else {
                     startDate = moment(this.state.custom.from).hours(0).minutes(0).seconds(0);
                     endDate = moment(this.state.custom.to).hours(23).minutes(59).seconds(59);
                 }
         }
-        this.props.applyFilter(startDate, endDate);
-        this.props.close();
+        if(hasError) {
+            this.setState({...this.state, errors });
+        }
+        else {
+            this.props.applyFilter(startDate, endDate);
+        }
     }
 
     render() {
         return (
-        <div className="modal" id="modalFilterExpense" tabIndex="-1" role="dialog">
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Filter expenses</h5>
-                    </div>
-                    <div className="modal-body">
-                        <div className="form-group">
-                            <label>View</label>
-                            <select value={this.state.viewType} onChange={this.changeViewType.bind(this)} className="form-control">
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="yearly">Yearly</option>
-                                <option value="custom">Custom range</option>
-                            </select>
-                        </div>
-                        {this.state.viewType === 'daily' ?
-                            <div className="form-group">
-                                <label>Date</label>
-                                <input type="date" className="form-control" value={this.state.daily.date} onChange={this.changeStateValue.bind(this, 'daily', 'date')} />
-                            </div>
-                        : null }
-                        {this.state.viewType === 'weekly' ?
-                            <div className="form-group">
-                                <label>Week</label>
-                                <input type="week" className="form-control" value={this.state.weekly.week} onChange={this.changeStateValue.bind(this, 'weekly', 'week')} />
-                            </div>
-                        : null }
-                        {this.state.viewType === 'monthly' ?
-                            <div className="form-group">
-                                <label>Month</label>
-                                <input type="month" className="form-control" value={this.state.monthly.month} onChange={this.changeStateValue.bind(this, 'monthly', 'month')} />
-                            </div>
-                        : null }
-                        {this.state.viewType === 'yearly' ?
-                            <div className="form-group">
-                                <label>Year</label>
-                                <input type="year" className="form-control" value={this.state.yearly.year} onChange={this.changeStateValue.bind(this, 'yearly', 'year')} />
-                            </div>
-                        : null }
-                        {this.state.viewType === 'custom' ?
-                            <div>
-                                <div className="form-group">
-                                    <label>From</label>
-                                    <input type="date" className="form-control" value={this.state.custom.from} onChange={this.changeStateValue.bind(this, 'custom', 'from')} />
-                                </div>
-                                <div className="form-group">
-                                    <label>To</label>
-                                    <input type="date" className="form-control" value={this.state.custom.to} onChange={this.changeStateValue.bind(this, 'custom', 'to')} />
-                                </div>
-                            </div>
-                        : null }
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" className="btn btn-primary" onClick={this.handleApply.bind(this)}>Apply</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <>
+                <DialogTitle>Filter expense</DialogTitle>
+                <DialogContent>
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>View</InputLabel>
+                        <Select
+                            value={this.state.viewType} onChange={this.changeViewType.bind(this)}>
+                                <MenuItem value="daily"><em>Daily</em></MenuItem>
+                                <MenuItem value="weekly"><em>Weekly</em></MenuItem>
+                                <MenuItem value="monthly"><em>Monthly</em></MenuItem>
+                                <MenuItem value="yearly"><em>Yearly</em></MenuItem>
+                                <MenuItem value="custom"><em>Custom</em></MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    {this.state.viewType === 'daily' ?
+                        <TextField
+                            error={this.state.errors.daily}
+                            ref="title"
+                            label="Date"
+                            value={this.state.daily.date} 
+                            onChange={this.changeStateValue.bind(this, 'daily', 'date')}
+                            margin="normal"
+                            type="date"
+                            className="form-control"
+                        />
+                    : null }
+                    {this.state.viewType === 'weekly' ?
+                        <TextField
+                            error={this.state.errors.weekly}
+                            ref="title"
+                            label="Week"
+                            value={this.state.weekly.week} 
+                            onChange={this.changeStateValue.bind(this, 'weekly', 'week')}
+                            margin="normal"
+                            type="week"
+                            className="form-control"
+                        />
+                    : null }
+                    {this.state.viewType === 'monthly' ?
+                        <TextField
+                            error={this.state.errors.monthly}
+                            ref="title"
+                            label="Month"
+                            value={this.state.monthly.month} 
+                            onChange={this.changeStateValue.bind(this, 'monthly', 'month')}
+                            margin="normal"
+                            type="month"
+                            className="form-control"
+                        />
+                    : null }
+                    {this.state.viewType === 'yearly' ?
+                        <TextField
+                            error={this.state.errors.yearly}
+                            ref="title"
+                            label="Year"
+                            value={this.state.yearly.year} 
+                            onChange={this.changeStateValue.bind(this, 'yearly', 'year')}
+                            margin="normal"
+                            className="form-control"
+                        />
+                    : null }
+                    {this.state.viewType === 'custom' ?
+                        <>
+                            <TextField
+                                error={this.state.errors.from}
+                                ref="title"
+                                label="From"
+                                value={this.state.custom.from} 
+                                onChange={this.changeStateValue.bind(this, 'custom', 'from')}
+                                margin="normal"
+                                type="date"
+                                className="form-control"
+                            />
+                            <TextField
+                                error={this.state.errors.to}
+                                ref="title"
+                                label="To"
+                                value={this.state.custom.to} 
+                                onChange={this.changeStateValue.bind(this, 'custom', 'to')}
+                                margin="normal"
+                                type="date"
+                                className="form-control"
+                            />
+                        </>
+                    : null }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.props.close} color="secondary">Cancel</Button>
+                    <Button onClick={this.handleApply.bind(this)} color="primary">Apply</Button>
+                </DialogActions>
+            </>
         );
     }
 }

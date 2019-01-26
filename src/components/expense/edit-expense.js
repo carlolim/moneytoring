@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import Toolbar from "../common/my-toolbar";
+import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
 import { formatMoney } from "../../helpers";
-import ModalDanger from "../common/modal-danger";
+import IconButton from '@material-ui/core/IconButton';
+import Save from '@material-ui/icons/Save';
+import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 class EditExpense extends Component {
     constructor(props) {
@@ -16,7 +22,14 @@ class EditExpense extends Component {
             date: moment().format('YYYY-MM-DD[T]HH:mm'),
             description: '',
             accounts: [],
-            categories: []
+            categories: [],
+            errors: {
+                title: false,
+                category: false,
+                amount: false,
+                account: false,
+                date: false
+            }
         }
     }
 
@@ -106,37 +119,49 @@ class EditExpense extends Component {
             description: this.state.description,
             date: new Date(this.state.date)
         };
-
-        console.log(data);
+        
+        let hasError = false;
+        let errors = {
+            title: false,
+            category: false,
+            amount: false,
+            account: false,
+            date: false
+        }
         if (data.title === '') {
-            alert('Title is required');
-            this.refs["title"].focus();
-            return;
+            errors.title = true;
+            hasError = true;
         }
-        else if (data.amount === 0 || isNaN(data.amount)) {
-            alert('Amount is required');
-            this.refs["amount"].focus();
-            return;
+        if (data.amount === 0 || isNaN(data.amount)) {
+            errors.amount = true;
+            hasError = true;
         }
-        else if (data.accountId === 0) {
-            alert('Select account');
-            this.refs["account"].focus();
-            return;
+        if (data.accountId === 0) {
+            errors.account = true;
+            hasError = true;
         }
-        else if (!this.state.date || this.state.date === '') {
-            alert('Date is required');
-            this.refs["date"].focus();
-            return;
+        if (data.categoryId === 0) {
+            errors.category = true;
+            hasError = true;
+        }
+        if (!this.state.date || this.state.date === '') {
+            errors.date = true;
+            hasError = true;
         }
 
-        const requestDatabase = indexedDB.open("Moneytoring");
-        requestDatabase.onsuccess = function (event) {
-            var db = event.target.result;
-            var transaction = db.transaction("expense", "readwrite");
-            var store = transaction.objectStore("expense");
-            store.put(data);
-            transaction.oncomplete = function (event) {
-                self.props.history.push("/expense");
+        if(hasError) {
+            this.setState({...this.state, errors});
+        }
+        else {
+            const requestDatabase = indexedDB.open("Moneytoring");
+            requestDatabase.onsuccess = function (event) {
+                var db = event.target.result;
+                var transaction = db.transaction("expense", "readwrite");
+                var store = transaction.objectStore("expense");
+                store.put(data);
+                transaction.oncomplete = function (event) {
+                    self.props.history.push("/expense");
+                }
             }
         }
     }
@@ -160,45 +185,80 @@ class EditExpense extends Component {
 
     render() {
       return (
-        <div>
-            <Toolbar 
+        <>
+            <MyToolbar 
+                onBack={() => {this.props.history.goBack()}}
                 showBackButton={true}
-                title="Edit expense"
+                title="Add expense"
                 buttons={[
-                    (<button data-toggle="modal" data-target="#modalDanger" onClick={() => {}}><i className="fas fa-trash-alt"></i></button>),
-                    (<button onClick={this.handleSave.bind(this)}><i className="fas fa-save"></i></button>)
+                    (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
                 ]}
             />
-            <div className="content">
-                <div className="p-3">
-                    <div className="form-group">
-                        <select ref="account" className="form-control" value={this.state.accountId} onChange={this.handleChangeProperty.bind(this, 'accountId')}>
-                            <option>-select account-</option>
-                            {this.state.accounts.map(item => <option key={item.accountId} value={item.accountId}>{item.name}</option>)}
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <input placeholder="Title" type="text" ref="title" className="form-control" value={this.state.title} onChange={this.handleChangeProperty.bind(this, 'title')} />
-                    </div>
-                    <div className="form-group">
-                        <input placeholder="Amount" onBlur={this.formatCurrency.bind(this)} ref="amount" type="text" className="form-control text-right" value={this.state.amount} onChange={this.handleChangeProperty.bind(this, 'amount')} />
-                    </div>
-                    <div className="form-group">
-                        <select className="form-control" value={this.state.categoryId} onChange={this.handleChangeProperty.bind(this, 'categoryId')}>
-                            <option>-select category-</option>
-                            {this.state.categories.map(item => <option key={item.categoryId} value={item.categoryId}>{item.name}</option>)}
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <input placeholder="Date" type="datetime-local" ref="date" className="form-control" value={this.state.date} onChange={this.handleChangeProperty.bind(this, 'date')} />
-                    </div>
-                    <div className="form-group">
-                        <textarea placeholder="Description" rows="5" className="form-control" value={this.state.description} onChange={this.handleChangeProperty.bind(this, 'description')}></textarea>
-                    </div>
-                </div>
+            <div className="content" style={{marginTop: "56px"}}>
+                <FormControl className="form-control" margin="normal">
+                    <InputLabel>Account</InputLabel>
+                    <Select
+                        ref="account"
+                        error={this.state.errors.account}
+                        value={this.state.accountId}
+                        onChange={this.handleChangeProperty.bind(this, 'accountId')}>
+                            <MenuItem value={0}><em>select account</em></MenuItem>
+                            {this.state.accounts.map(item => <MenuItem key={item.accountId} value={item.accountId}>{item.name}</MenuItem>)}
+                    </Select>
+                </FormControl>
+                <TextField
+                    ref="title"
+                    error={this.state.errors.title}
+                    label="Title"
+                    value={this.state.title}
+                    onChange={this.handleChangeProperty.bind(this, 'title')}
+                    margin="normal"
+                    className="form-control"
+                />
+                <TextField
+                    ref="amount"
+                    error={this.state.errors.amount}
+                    label="Amount"
+                    value={this.state.amount}
+                    onChange={this.handleChangeProperty.bind(this, 'amount')}
+                    margin="normal"
+                    className="form-control"
+                    onBlur={this.formatCurrency.bind(this)}
+                />
+                <FormControl className="form-control" margin="normal">
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                        ref="category"
+                        error={this.state.errors.category}
+                        value={this.state.categoryId}
+                        onChange={this.handleChangeProperty.bind(this, 'categoryId')}>
+                            <MenuItem value={0}><em>select category</em></MenuItem>
+                            {this.state.categories.map(item => <MenuItem key={item.categoryId} value={item.categoryId}>{item.name}</MenuItem>)}
+                    </Select>
+                </FormControl>
+                <TextField
+                    ref="date"
+                    error={this.state.errors.date}
+                    label="Date"
+                    type="datetime-local"
+                    value={this.state.title}
+                    onChange={this.handleChangeProperty.bind(this, 'title')}
+                    margin="normal"
+                    className="form-control"
+                    value={this.state.date} 
+                    onChange={this.handleChangeProperty.bind(this, 'date')}
+                />
+                <TextField
+                    className="form-control"
+                    label="Notes"
+                    multiline
+                    rows="6"
+                    value={this.state.description} 
+                    onChange={this.handleChangeProperty.bind(this, 'description')}
+                    margin="normal"
+                />
             </div>
-            <ModalDanger title="Confirm" body="Are you sure you want to delete this?" callback={this.handleDelete.bind(this)} />
-        </div>
+        </>
       );
     }
   }

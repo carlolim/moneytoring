@@ -22,7 +22,7 @@ class MyToolbar extends Component {
   render(){
     return (
       <div style={styles.root}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             {this.props.showBackButton ? 
               <IconButton onClick={this.props.onBack} style={styles.menuButton} color="inherit" aria-label="Menu">

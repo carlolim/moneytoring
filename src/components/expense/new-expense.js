@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Toolbar from "../common/my-toolbar";
+import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
 import { formatMoney } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
@@ -138,8 +138,8 @@ class NewExpense extends Component {
 
     render() {
       return (
-        <div>
-            <Toolbar 
+        <>
+            <MyToolbar 
                 onBack={() => {this.props.history.goBack()}}
                 showBackButton={true}
                 title="Add expense"
@@ -147,7 +147,7 @@ class NewExpense extends Component {
                     (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
                 ]}
             />
-            <div className="content">
+            <div className="content" style={{marginTop: "56px"}}>
                 <FormControl className="form-control" margin="normal">
                     <InputLabel>Account</InputLabel>
                     <Select
@@ -211,7 +211,7 @@ class NewExpense extends Component {
                     margin="normal"
                 />
             </div>
-        </div>
+        </>
       );
     }
   }

@@ -7,7 +7,15 @@ import moment from "moment";
 import { formatMoney } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import FilterList from '@material-ui/icons/FilterList';
-import Modal from "@material-ui/core/Modal";
+import Dialog from "@material-ui/core/Dialog";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from "@material-ui/core/Typography";
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
 class Expense extends Component {
     constructor (props) {
@@ -49,6 +57,7 @@ class Expense extends Component {
           var selectall = range === null ? store.index('date').openCursor(null, 'prev') : store.index('date').openCursor(range, 'prev');
           
           selectall.onsuccess = (event) => {
+              this.setState({...this.state, showFilter: false});
               var cursor = event.target.result;
               if(cursor) {
                   this.setState({...this.state, 
@@ -69,23 +78,36 @@ class Expense extends Component {
                 <FilterList />
             </IconButton>
           ]} />
-          <div className="content">
-            <div className="under-toolbar-message text-center pt-1">
-              {this.state.currentFilter}<br/><small>{formatMoney(this.state.total)}</small>
-            </div>
-            <div className="expenses-holder">
-                {this.state.expenses.map(item =>
-                  <Link key={item.expenseId} className="list-item d-block" to={'/expense/edit/' + item.expenseId}>
-                    {item.title}
-                    <small className="float-right">{formatMoney(item.amount)}</small>
-                  </Link>
-                )}
-                {this.state.expenses.length === 0 ? <p className="text-center mt-5">Wow! no expenses!</p> : null}
-            </div>
+          <AppBar position="fixed" style={{marginTop: '56px', zIndex: 1}} color="default">
+            <Toolbar>
+              <Typography style={{display: "block", width: "100%", textAlign: "center"}} component="p">
+                {this.state.currentFilter}<br/><small>{formatMoney(this.state.total)}</small>
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          
+          <div style={{marginTop: '112px', overflowY: 'scroll', minHeight: '100%'}}>
+              <List component="nav">
+                  {this.state.expenses.map(item =>
+                      <Link key={item.expenseId} style={{textDecoration:'none'}} className="list-item" to={'/expense/edit/' + item.expenseId}>
+                          <ListItem button>
+                              <ListItemText primary={item.title} />
+                              <Typography className="float-right">{formatMoney(item.amount)}</Typography >
+                          </ListItem>
+                      </Link>
+                  )}
+              </List>
           </div>
-          <Modal open={this.state.showFilter} onClose={this.toggleFilter}>
+
+          <Dialog
+            onClose={this.toggleFilter}
+            open={this.state.showFilter}>
               <Filter close={this.toggleFilter.bind(this)} applyFilter={this.loadExpenses.bind(this)} />
-          </Modal>
+          </Dialog>
+          
+          <Fab onClick={() => {this.props.history.push("/expense/new")}} color="primary" aria-label="Add" style={{position: 'fixed', bottom: '15px', right: '15px'}}>
+              <AddIcon />
+          </Fab>
         </div>
       );
     }
