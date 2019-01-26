@@ -81,7 +81,6 @@ class NewExpense extends Component {
     }
 
     handleSave () {
-        var self = this;
         var data = {
             title: this.state.title,
             categoryId: this.state.categoryId,
@@ -90,36 +89,49 @@ class NewExpense extends Component {
             description: this.state.description,
             date: new Date(this.state.date)
         };
+        
+        let hasError = false;
+        let errors = {
+            title: false,
+            category: false,
+            amount: false,
+            account: false,
+            date: false
+        }
         if (data.title === '') {
-            alert('Title is required');
-            console.log(this.refs["title"]);
-            this.refs["title"].focus();
-            return;
+            errors.title = true;
+            hasError = true;
         }
-        else if (data.amount === 0 || isNaN(data.amount)) {
-            alert('Amount is required');
-            this.refs["amount"].focus();
-            return;
+        if (data.amount === 0 || isNaN(data.amount)) {
+            errors.amount = true;
+            hasError = true;
         }
-        else if (data.accountId === 0) {
-            alert('Select account');
-            this.refs["account"].focus();
-            return;
+        if (data.accountId === 0) {
+            errors.account = true;
+            hasError = true;
         }
-        else if (!this.state.date || this.state.date === '') {
-            alert('Date is required');
-            this.refs["date"].focus();
-            return;
+        if (data.categoryId === 0) {
+            errors.category = true;
+            hasError = true;
+        }
+        if (!this.state.date || this.state.date === '') {
+            errors.date = true;
+            hasError = true;
         }
 
-        const requestDatabase = indexedDB.open("Moneytoring");
-        requestDatabase.onsuccess = function (event) {
-            var db = event.target.result;
-            var transaction = db.transaction("expense", "readwrite");
-            var store = transaction.objectStore("expense");
-            store.put(data);
-            transaction.oncomplete = function (event) {
-                self.props.history.push("/expense");
+        if(hasError) {
+            this.setState({...this.state, errors});
+        }
+        else {
+            const requestDatabase = indexedDB.open("Moneytoring");
+            requestDatabase.onsuccess = (event) => {
+                var db = event.target.result;
+                var transaction = db.transaction("expense", "readwrite");
+                var store = transaction.objectStore("expense");
+                store.put(data);
+                transaction.oncomplete = (event) => {
+                    this.props.history.push("/expense");
+                }
             }
         }
     }
