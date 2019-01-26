@@ -55,7 +55,6 @@ class Expense extends Component {
           var transaction = db.transaction(["expense"], "readonly");
           var store = transaction.objectStore("expense");
           var selectall = range === null ? store.index('date').openCursor(null, 'prev') : store.index('date').openCursor(range, 'prev');
-          
           selectall.onsuccess = (event) => {
               this.setState({...this.state, showFilter: false});
               var cursor = event.target.result;
