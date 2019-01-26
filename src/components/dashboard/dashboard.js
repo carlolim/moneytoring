@@ -50,12 +50,12 @@ class Dashboard extends Component {
                 <Fab className="animated jello" color="default" size="small" aria-label="income" style={styles.fabIncome}>
                   <AttachMoneyICon />
                 </Fab>
+                <Backdrop onClick={this.toggleMenu} open="true" />
               </>
             : null }
             <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" style={styles.fabPrimary}>
               {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
             </Fab>
-            <Backdrop onClick={this.toggleMenu} open={this.state.showMenu} />
         </div>
       );
     }

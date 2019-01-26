@@ -96,7 +96,7 @@ class Filter extends Component {
                 }
         }
         this.props.applyFilter(startDate, endDate);
-        window.$("#modalFilterExpense").modal('hide');
+        this.props.close();
     }
 
     render() {

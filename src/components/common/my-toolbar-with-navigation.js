@@ -47,7 +47,7 @@ class MyToolbarWithNavigation extends Component {
               </div>
         </SwipeableDrawer>
         <AppBar position="static">
-            <Toolbar>
+          <Toolbar>
             <IconButton onClick={this.toggleDrawer} style={styles.menuButton} color="inherit" aria-label="Menu">
                 <MenuIcon />
             </IconButton>

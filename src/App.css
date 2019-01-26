@@ -19,3 +19,11 @@ body {
 .text-right {
     text-align: right !important;
 }
+
+.modal {
+    position: 'absolute';
+    max-width: 400px;
+    background-color: white;
+    outline: none;
+    margin: 10px;
+}

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import './expense.css';
-import Toolbar from "../common/my-toolbar";
 import Filter from "../common/filter";
 import moment from "moment";
 import { formatMoney } from "../../helpers";
+import IconButton from '@material-ui/core/IconButton';
+import FilterList from '@material-ui/icons/FilterList';
+import Modal from "@material-ui/core/Modal";
 
 class Expense extends Component {
     constructor (props) {
@@ -12,7 +15,8 @@ class Expense extends Component {
       this.state = {
         currentFilter: '',
         total: 0,
-        expenses: []
+        expenses: [],
+        showFilter: false
       }
     }
 
@@ -20,6 +24,10 @@ class Expense extends Component {
       let from = moment().hours(0).minutes(0).seconds(0);
       let to = moment().hours(23).minutes(59).seconds(59);
       this.loadExpenses(from, to);
+    }
+
+    toggleFilter = () => {
+      this.setState({...this.state, showFilter: !this.state.showFilter});
     }
 
     loadExpenses = (from, to) => {
@@ -56,11 +64,11 @@ class Expense extends Component {
     render() {
       return (
         <div>
-          <Toolbar title="Expense"
-                buttons={[
-                    (<button data-toggle="modal" data-target="#modalFilterExpense"><i className="fas fa-filter"></i></button>)
-                ]}
-          />
+          <MyToolbarWithNavigation title="Expense" buttons={[
+            <IconButton onClick={this.toggleFilter} color="inherit" aria-label="Menu">
+                <FilterList />
+            </IconButton>
+          ]} />
           <div className="content">
             <div className="under-toolbar-message text-center pt-1">
               {this.state.currentFilter}<br/><small>{formatMoney(this.state.total)}</small>
@@ -75,7 +83,9 @@ class Expense extends Component {
                 {this.state.expenses.length === 0 ? <p className="text-center mt-5">Wow! no expenses!</p> : null}
             </div>
           </div>
-          <Filter applyFilter={this.loadExpenses.bind(this)} />
+          <Modal open={this.state.showFilter} onClose={this.toggleFilter}>
+              <Filter close={this.toggleFilter.bind(this)} applyFilter={this.loadExpenses.bind(this)} />
+          </Modal>
         </div>
       );
     }
