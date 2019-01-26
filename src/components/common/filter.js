@@ -191,6 +191,7 @@ class Filter extends Component {
                             onChange={this.changeStateValue.bind(this, 'yearly', 'year')}
                             margin="normal"
                             className="form-control"
+                            type="number"
                         />
                     : null }
                     {this.state.viewType === 'custom' ?

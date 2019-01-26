@@ -6,6 +6,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import AttachMoneyICon from "@material-ui/icons/AttachMoney";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import Backdrop from '@material-ui/core/Backdrop';
+import ExpenseSummary from "./widgets/expense-summary";
+import IncomeSummary from "./widgets/income-summary";
 
 
 const styles = {
@@ -38,6 +40,12 @@ class Dashboard extends Component {
       return (
         <div>
             <MyToolbarWithNavigation title="moneytoring" buttons={[]} />
+            <div style={{padding: '10px'}}>
+                <ExpenseSummary />
+            </div>
+            <div style={{padding: '10px'}}>
+                <IncomeSummary />
+            </div>
             {this.state.showMenu ? 
               <>
                 <Fab onClick={this.newExpense} className="animated jello" color="default" size="small" aria-label="expense" style={styles.fabExpense}>

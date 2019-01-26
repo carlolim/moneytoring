@@ -10,6 +10,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 const styles = {
   root: {
     flexGrow: 1,
+    paddingTop: 56
   },
   grow: {
     flexGrow: 1,

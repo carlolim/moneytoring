@@ -16,6 +16,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Divider from "@material-ui/core/Divider";
 
 class Expense extends Component {
     constructor (props) {
@@ -55,18 +56,25 @@ class Expense extends Component {
           var transaction = db.transaction(["expense"], "readonly");
           var store = transaction.objectStore("expense");
           var selectall = range === null ? store.index('date').openCursor(null, 'prev') : store.index('date').openCursor(range, 'prev');
+          this.setState({...this.state, showFilter: false});
+          let shits = [];
+          let total = 0;
           selectall.onsuccess = (event) => {
-              this.setState({...this.state, showFilter: false});
               var cursor = event.target.result;
               if(cursor) {
-                  this.setState({...this.state, 
-                    expenses: [...this.state.expenses, cursor.value],
-                    total: this.state.total + cursor.value.amount
-                  });
+                  shits.push(cursor.value);
+                  total += cursor.value.amount;
                   cursor.continue();
               }
           }
+          transaction.oncomplete = () => {
+            this.renderShits(shits, total);
+          }
       }
+    }
+
+    renderShits = (shits, total) => {
+      this.setState({...this.state, expenses: shits, total});
     }
 
     render() {
@@ -85,7 +93,7 @@ class Expense extends Component {
             </Toolbar>
           </AppBar>
           
-          <div style={{marginTop: '112px', overflowY: 'scroll', minHeight: '100%'}}>
+          <div style={{marginTop: '56px', overflowY: 'auto', minHeight: '100%'}}>
               <List component="nav">
                   {this.state.expenses.map(item =>
                       <Link key={item.expenseId} style={{textDecoration:'none'}} className="list-item" to={'/expense/edit/' + item.expenseId}>
@@ -93,6 +101,7 @@ class Expense extends Component {
                               <ListItemText primary={item.title} />
                               <Typography className="float-right">{formatMoney(item.amount)}</Typography >
                           </ListItem>
+                          <Divider light />
                       </Link>
                   )}
               </List>

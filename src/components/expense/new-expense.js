@@ -147,7 +147,7 @@ class NewExpense extends Component {
                     (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
                 ]}
             />
-            <div className="content" style={{marginTop: "56px"}}>
+            <div className="content">
                 <FormControl className="form-control" margin="normal">
                     <InputLabel>Account</InputLabel>
                     <Select

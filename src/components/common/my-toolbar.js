@@ -8,6 +8,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 const styles = {
   root: {
     flexGrow: 1,
+    paddingTop: 56
   },
   grow: {
     flexGrow: 1,

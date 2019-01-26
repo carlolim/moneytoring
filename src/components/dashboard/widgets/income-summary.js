@@ -15,13 +15,14 @@ import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 const styles = {
   card: {
     minWidth: 275,
+    marginBottom: '10px'
   },
   cardFooter: {
     float: 'right'
   }
 };
 
-function ExpenseSummary(props) {
+function IncomeSummary(props) {
   const { classes } = props;
 
   return (
@@ -35,8 +36,8 @@ function ExpenseSummary(props) {
             <ArrowForwardIos />
           </IconButton>
         ]}
-        title="Expense"
-        subheader="September 14"
+        title="Income"
+        subheader="January 2019"
       />
       <Divider />
       <CardContent>
@@ -50,8 +51,8 @@ function ExpenseSummary(props) {
   );
 }
 
-ExpenseSummary.propTypes = {
+IncomeSummary.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ExpenseSummary);
+export default withStyles(styles)(IncomeSummary);
