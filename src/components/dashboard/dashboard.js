@@ -12,13 +12,16 @@ import IncomeSummary from "./widgets/income-summary";
 
 const styles = {
   fabPrimary: {
-    position: 'absolute', bottom: '15px', right: '15px'
+    position: 'absolute', bottom: '15px', right: '15px', zIndex: 2
   },
   fabExpense: {
-    position: 'absolute', bottom: '150px',  right: '23px'
+    position: 'absolute', bottom: '150px',  right: '23px', zIndex: 2
   },
   fabIncome: {
-    position: 'absolute',bottom: '90px', right: '23px'
+    position: 'absolute',bottom: '90px', right: '23px', zIndex: 2
+  },
+  backdrop: {
+    zIndex: 1
   }
 }
 
@@ -40,26 +43,25 @@ class Dashboard extends Component {
       return (
         <div>
             <MyToolbarWithNavigation title="moneytoring" buttons={[]} />
-            <div style={{padding: '10px'}}>
-                <ExpenseSummary />
-            </div>
-            <div style={{padding: '10px'}}>
-                <IncomeSummary />
-            </div>
             {this.state.showMenu ? 
               <>
-                <Fab onClick={this.newExpense} className="animated jello" color="default" size="small" aria-label="expense" style={styles.fabExpense}>
+                <Fab onClick={this.newExpense} className="animated jello" color="secondary" size="small" aria-label="expense" style={styles.fabExpense}>
                   <MoneyOffIcon />
                 </Fab>
                 <Fab className="animated jello" color="default" size="small" aria-label="income" style={styles.fabIncome}>
                   <AttachMoneyICon />
                 </Fab>
-                <Backdrop onClick={this.toggleMenu} open={true} />
+                <Backdrop onClick={this.toggleMenu} open={true} style={styles.backdrop} />
               </>
             : null }
             <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" style={styles.fabPrimary}>
               {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
             </Fab>
+            <div style={{padding: '10px'}}>
+                <ExpenseSummary />
+            </div>
+            <div style={{padding: '10px'}}>
+            </div>
         </div>
       );
     }
