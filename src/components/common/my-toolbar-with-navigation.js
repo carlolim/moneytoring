@@ -43,7 +43,8 @@ class MyToolbarWithNavigation extends Component {
                 tabIndex={0}
                 role="button"
                 onClick={this.toggleDrawer}
-                onKeyDown={this.toggleDrawer}>
+                onKeyDown={this.toggleDrawer}
+                disableBackdropTransition={true}>
                   <NavigationLinks />
               </div>
         </SwipeableDrawer>

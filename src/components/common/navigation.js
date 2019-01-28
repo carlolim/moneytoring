@@ -19,7 +19,8 @@ class Navigation extends Component {
         <SwipeableDrawer
           open={this.state.left}
           onClose={this.toggleDrawer}
-          onOpen={this.toggleDrawer}>
+          onOpen={this.toggleDrawer}
+          disableBackdropTransition={true}>
               <div
                 tabIndex={0}
                 role="button"

@@ -60,7 +60,7 @@ class ExpenseSummary extends Component {
               </IconButton>
             </>}
             title="Expense"
-            subheader={<Typography>{this.state.filterDate}</Typography>}
+            subheader="Jan 01"
           />
           <Divider />
           <CardContent>
