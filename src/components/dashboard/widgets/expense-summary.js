@@ -129,7 +129,7 @@ class ExpenseSummary extends Component {
                         <div className={classes.expenseItem}>
                           {data.items.map((item, i)=> 
                               <div key={i}>
-                                  <Typography variant="overline">{item.title}<span style={{float: 'right'}}>{item.amount}</span></Typography>
+                                  <Typography variant="subtitle1">{item.title}<span style={{float: 'right'}}>{item.amount}</span></Typography>
                                   <Divider light />
                               </div>
                           )}

@@ -4,16 +4,19 @@ import moment from "moment";
 import { formatMoney } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Save from '@material-ui/icons/Save';
+import Delete from '@material-ui/icons/Delete';
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { DialogTitle, Dialog, Button, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
 class EditExpense extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            showDelete: false,
             expenseId: Number(this.props.match.params.id),
             title: '',
             categoryId: 0,
@@ -173,14 +176,14 @@ class EditExpense extends Component {
             var transaction = db.transaction("expense", "readwrite");
             var store = transaction.objectStore("expense");
             store.delete(this.state.expenseId);
-            console.log(1);
             transaction.oncomplete = (event) => {
-                window.$('#modalDanger').on('hidden.bs.modal', () => {
-                    this.props.history.push("/expense");
-                });
-                window.$("#modalDanger").modal('hide');
+                this.props.history.push("/expense");
             }
         }
+    }
+
+    toggleDeleteModal = () => {
+        this.setState({...this.state, showDelete: !this.state.showDelete});
     }
 
     render() {
@@ -191,6 +194,7 @@ class EditExpense extends Component {
                 showBackButton={true}
                 title="Add expense"
                 buttons={[
+                    (<IconButton onClick={this.toggleDeleteModal.bind(this)}  color="inherit"><Delete /></IconButton>),
                     (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
                 ]}
             />
@@ -250,6 +254,23 @@ class EditExpense extends Component {
                     onChange={this.handleChangeProperty.bind(this, 'description')}
                     margin="normal"
                 />
+                
+                <Dialog
+                    onClose={this.toggleDeleteModal}
+                    open={this.state.showDelete}>
+                <DialogTitle>Confirm</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Are you sure you want to delete?</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.toggleDeleteModal} color="primary" autoFocus>
+                    Cancel
+                    </Button>
+                    <Button onClick={this.handleDelete} color="primary">
+                    Delete
+                    </Button>
+                </DialogActions>
+                </Dialog>
             </div>
         </>
       );
