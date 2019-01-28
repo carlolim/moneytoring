@@ -151,7 +151,6 @@ class NewExpense extends Component {
                 <FormControl className="form-control" margin="normal">
                     <InputLabel>Account</InputLabel>
                     <Select
-                        ref="account"
                         error={this.state.errors.account}
                         value={this.state.accountId}
                         onChange={this.handleChangeProperty.bind(this, 'accountId')}>
@@ -160,7 +159,6 @@ class NewExpense extends Component {
                     </Select>
                 </FormControl>
                 <TextField
-                    ref="title"
                     error={this.state.errors.title}
                     label="Title"
                     value={this.state.title}
@@ -169,7 +167,6 @@ class NewExpense extends Component {
                     className="form-control"
                 />
                 <TextField
-                    ref="amount"
                     error={this.state.errors.amount}
                     label="Amount"
                     value={this.state.amount}
@@ -181,7 +178,6 @@ class NewExpense extends Component {
                 <FormControl className="form-control" margin="normal">
                     <InputLabel>Category</InputLabel>
                     <Select
-                        ref="category"
                         error={this.state.errors.category}
                         value={this.state.categoryId}
                         onChange={this.handleChangeProperty.bind(this, 'categoryId')}>
@@ -190,12 +186,9 @@ class NewExpense extends Component {
                     </Select>
                 </FormControl>
                 <TextField
-                    ref="date"
                     error={this.state.errors.date}
                     label="Date"
                     type="datetime-local"
-                    value={this.state.title}
-                    onChange={this.handleChangeProperty.bind(this, 'title')}
                     margin="normal"
                     className="form-control"
                     value={this.state.date} 

@@ -18,6 +18,9 @@ const styles = {
   },
   cardFooter: {
     float: 'right'
+  },
+  expenseItem:{
+    marginLeft: 20
   }
 };
 
@@ -30,19 +33,74 @@ class ExpenseSummary extends Component {
       filterType: filterTypes.daily,
       from: moment().hours(0).minutes(0).seconds(0),
       to: moment().hours(23).minutes(59).seconds(59),
-      filterDate: moment().toDate()
+      filterDate: '',
+      data: [],
+      total: 0
     }
   }
 
-  componentDidMount() {
-    this.generateFilterDate();
+  componentDidMount () {
+    this.loadSummary();
   }
 
-  generateFilterDate() {
-    if (this.state.filterType === filterTypes.daily) {
-      return this.state.from.toDate("MMMM dd")
+  generateFilterDate () {
+    let filterDate = this.state.from.format("MMM DD");
+    if (this.state.filterType !== filterTypes.daily) {
+      filterDate = this.state.from.format("MMM DD") + ' - ' + this.state.to.format("MMM DD");
     }
-    return "";
+    this.setState({...this.state, filterDate});
+  }
+  
+  loadSummary () {
+    var range = IDBKeyRange.bound(this.state.from.toDate(), this.state.to.toDate());
+    let expenses = [];
+    let categories = [];
+    let total = 0;
+    let data = [];
+
+    const requestDatabase = indexedDB.open("Moneytoring");
+    requestDatabase.onsuccess = (event) => {
+        var db = event.target.result;
+        var transaction = db.transaction(["expense", "category"], "readonly");
+        var store = transaction.objectStore("expense");
+        var selectall = store.index('date').openCursor(range, 'prev');
+        var selectAllCategory = transaction.objectStore("category").getAll();
+        selectall.onsuccess = (event) => {
+            var cursor = event.target.result;
+            if(cursor) {
+                expenses.push(cursor.value);
+                total += cursor.value.amount;
+                cursor.continue();
+            }
+        }
+
+        selectAllCategory.onsuccess = (event) => {
+          categories = event.target.result;
+        }
+
+        transaction.oncomplete = () => {
+          for(var i=0; i<categories.length; i++){
+            data.push({
+              category: categories[i],
+              items: expenses.filter(m => { return m.categoryId === categories[i].categoryId })
+            });
+          }
+          this.setState({...this.state, data, total});
+          this.generateFilterDate();
+        }
+    }
+  }
+
+  changeFilterType () {
+
+  }
+
+  next () {
+
+  }
+
+  prev () {
+
   }
 
   render() {
@@ -54,21 +112,35 @@ class ExpenseSummary extends Component {
             <>
               <IconButton>
                 <ArrowBackIos />
-              </IconButton>,
+              </IconButton>
               <IconButton>
                 <ArrowForwardIos />
               </IconButton>
             </>}
             title="Expense"
-            subheader="Jan 01"
+            subheader={this.state.filterDate}
           />
           <Divider />
           <CardContent>
-            
+            {this.state.data.map((data, index) =>
+                data.items.length > 0 ?
+                    <div key={index}>
+                        <Typography variant="h6">{data.category.name}</Typography>
+                        <div className={classes.expenseItem}>
+                          {data.items.map((item, i)=> 
+                              <div key={i}>
+                                  <Typography variant="overline">{item.title}<span style={{float: 'right'}}>{item.amount}</span></Typography>
+                                  <Divider light />
+                              </div>
+                          )}
+                        </div>
+                    </div>
+                : null
+            )}
           </CardContent>
           <Divider />
           <CardActions className={classes.cardFooter}>
-            <Typography component="p">0.00</Typography>
+            <Typography component="p">{this.state.total}</Typography>
           </CardActions>
         </Card>
       );

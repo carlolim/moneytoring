@@ -38,13 +38,13 @@ class MyToolbarWithNavigation extends Component {
         <SwipeableDrawer
           open={this.state.isOpen}
           onClose={this.toggleDrawer}
-          onOpen={this.toggleDrawer}>
+          onOpen={this.toggleDrawer}
+          disableBackdropTransition={true}>
               <div
                 tabIndex={0}
                 role="button"
                 onClick={this.toggleDrawer}
-                onKeyDown={this.toggleDrawer}
-                disableBackdropTransition={true}>
+                onKeyDown={this.toggleDrawer}>
                   <NavigationLinks />
               </div>
         </SwipeableDrawer>
