@@ -11,16 +11,25 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
+import { formatMoney } from "../../../helpers";
 
 const styles = {
   card: {
     minWidth: 275,
+  },
+  cardContent: {
+    height: 150,
+    overflowY: 'auto'
   },
   cardFooter: {
     float: 'right'
   },
   expenseItem:{
     marginLeft: 20
+  },
+  nothingToDoHere: {
+    paddingTop: 35,
+    textAlign: 'center'
   }
 };
 
@@ -44,7 +53,7 @@ class ExpenseSummary extends Component {
   }
 
   generateFilterDate () {
-    let filterDate = this.state.from.format("MMM DD");
+    let filterDate = this.state.from.format("MMM DD [(]ddd[)]");
     if (this.state.filterType !== filterTypes.daily) {
       filterDate = this.state.from.format("MMM DD") + ' - ' + this.state.to.format("MMM DD");
     }
@@ -80,9 +89,11 @@ class ExpenseSummary extends Component {
 
         transaction.oncomplete = () => {
           for(var i=0; i<categories.length; i++){
+            let categoryItemProperties = this.getExpensesForCategory(expenses, categories[i].categoryId);
             data.push({
               category: categories[i],
-              items: expenses.filter(m => { return m.categoryId === categories[i].categoryId })
+              subTotal: categoryItemProperties.subTotal,
+              items: categoryItemProperties.data
             });
           }
           this.setState({...this.state, data, total});
@@ -91,16 +102,26 @@ class ExpenseSummary extends Component {
     }
   }
 
+  getExpensesForCategory = (items, categoryId) => {
+    let data = items.filter(m => { return m.categoryId === categoryId });
+    return { 
+      data,
+      subTotal: data.reduce((currValue, i) => { return i.amount + currValue; }, 0)
+    };
+  }
+
   changeFilterType () {
 
   }
 
   next () {
-
+    this.setState({...this.state, from: this.state.from.add(1, "days"), to: this.state.to.add(1, "days")});
+    this.loadSummary();
   }
 
   prev () {
-
+    this.setState({...this.state, from: this.state.from.subtract(1, "days"), to: this.state.to.subtract(1, "days")});
+    this.loadSummary();
   }
 
   render() {
@@ -110,10 +131,10 @@ class ExpenseSummary extends Component {
           <CardHeader
             action={
             <>
-              <IconButton>
+              <IconButton onClick={this.prev.bind(this)}>
                 <ArrowBackIos />
               </IconButton>
-              <IconButton>
+              <IconButton onClick={this.next.bind(this)}>
                 <ArrowForwardIos />
               </IconButton>
             </>}
@@ -121,26 +142,28 @@ class ExpenseSummary extends Component {
             subheader={this.state.filterDate}
           />
           <Divider />
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             {this.state.data.map((data, index) =>
                 data.items.length > 0 ?
                     <div key={index}>
-                        <Typography variant="h6">{data.category.name}</Typography>
+                        <Typography variant="overline">
+                            {data.category.name}
+                            <span style={{float: 'right'}}>{formatMoney(data.subTotal)}</span>
+                        </Typography>
                         <div className={classes.expenseItem}>
                           {data.items.map((item, i)=> 
-                              <div key={i}>
-                                  <Typography variant="subtitle1">{item.title}<span style={{float: 'right'}}>{item.amount}</span></Typography>
-                                  <Divider light />
-                              </div>
+                              <Typography key={i} variant="caption">{item.title}<span style={{float: 'right'}}>{formatMoney(item.amount)}</span></Typography>
                           )}
                         </div>
+                        <Divider light />
                     </div>
                 : null
             )}
+            {this.state.total === 0 ? <Typography variant="body1" className={classes.nothingToDoHere}>to do here: nothing</Typography> : null}
           </CardContent>
           <Divider />
           <CardActions className={classes.cardFooter}>
-            <Typography component="p">{this.state.total}</Typography>
+            <Typography component="p">{formatMoney(this.state.total)}</Typography>
           </CardActions>
         </Card>
       );
