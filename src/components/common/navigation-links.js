@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from "@material-ui/icons/Home";
 import AttachMoneyICon from "@material-ui/icons/AttachMoney";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
+import ListAlt from "@material-ui/icons/ListAlt";
 
 class NavigationLinks extends Component {
     render() {
@@ -35,6 +36,14 @@ class NavigationLinks extends Component {
                     <AttachMoneyICon />
                 </ListItemIcon>
                 <ListItemText primary="Income" />
+              </ListItem>
+            </Link>
+            <Link to='/budget' style={{textDecoration: 'none'}}>
+              <ListItem>
+                <ListItemIcon>
+                    <ListAlt />
+                </ListItemIcon>
+                <ListItemText primary="Budget" />
               </ListItem>
             </Link>
           </List>
