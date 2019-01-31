@@ -1,6 +1,6 @@
 
 export const initialize = () => {
-    var request = window.indexedDB.open("Moneytoring", 2);
+    var request = window.indexedDB.open("Moneytoring", 3);
     
     request.onupgradeneeded = function(event) {
         var db = event.target.result;
@@ -28,6 +28,18 @@ export const initialize = () => {
         if (!db.objectStoreNames.contains('category')) {
             var categoryTable = db.createObjectStore("category", { keyPath: "categoryId", autoIncrement: true });
             categoryTable.createIndex("name", "name", { unique: false });
+        }
+
+        if (!db.objectStoreNames.contains('budget')) {
+            var budgetTable = db.createObjectStore("budget", {keyPath: "budgetId", autoIncrement: true});
+            budgetTable.createIndex("name", "name", { unique: false});
+            budgetTable.createIndex("repeat", "repeat", { unique: false});
+            budgetTable.createIndex("startDate", "startDate", { unique: false});
+            budgetTable.createIndex("endDate", "endDate", { unique: false});
+            budgetTable.createIndex("amount", "amount", { unique: false});
+            budgetTable.createIndex("accountIds", "accountIds", { unique: false});
+            budgetTable.createIndex("isActive", "isActive", { unique: false});
+            budgetTable.createIndex("categoryIds", "categoryIds", { unique: false});
         }
     }
 

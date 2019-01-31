@@ -29,11 +29,10 @@ class Budget extends Component {
     }
 
     componentDidMount = () => {
-        let asd = selectAll("expense", this.renderItems);
+        selectAll("budget", this.renderItems);
     }
 
     renderItems = (items) => {
-        console.log(items);
         this.setState({...this.state, items});
     }
 
