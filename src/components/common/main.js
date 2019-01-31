@@ -6,6 +6,7 @@ import Income from '../income/income';
 import NewExpense from '../expense/new-expense';
 import EditExpense from '../expense/edit-expense';
 import Budget from '../budget/budget';
+import NewBudget from '../budget/new-budget';
 
 class Main extends Component {
     render() {
@@ -16,6 +17,7 @@ class Main extends Component {
                 <Route path='/expense/edit/:id' component={EditExpense} />
                 <Route path='/expense/new' component={NewExpense} />
                 <Route path='/expense' component={Expense}/>
+                <Route path='/budget/new' component={NewBudget}/>
                 <Route path='/budget' component={Budget}/>
                 <Route path='/' component={Dashboard}/>
             </Switch>

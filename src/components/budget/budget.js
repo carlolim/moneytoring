@@ -42,7 +42,7 @@ class Budget extends Component {
                 <MyToolbarWithNavigation title="Budget" buttons={[]} />
                 
 
-                <Fab onClick={() => {}} color="primary" className={this.props.classes.fab}>
+                <Fab onClick={() => { this.props.history.push('budget/new') }} color="primary" className={this.props.classes.fab}>
                     <AddIcon />
                 </Fab>
             </>

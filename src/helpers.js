@@ -21,3 +21,11 @@ export const selectAll = (table, done) => {
     }
   }
 }
+
+export const budgetRepeatEnum = {
+  none: 0,
+  daily: 1,
+  weekly: 2,
+  monthly: 3,
+  custom: 4
+}
