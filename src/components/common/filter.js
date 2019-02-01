@@ -125,7 +125,7 @@ class Filter extends Component {
             this.setState({...this.state, errors });
         }
         else {
-            this.props.applyFilter(startDate, endDate);
+            this.props.applyFilter(startDate, endDate, this.state.viewType);
         }
     }
 

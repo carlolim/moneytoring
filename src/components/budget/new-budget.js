@@ -32,7 +32,7 @@ const styles = {
 
 class NewBudget extends Component {
     constructor(props) {
-        super (props);
+        super(props);
         this.state = {
             name: '',
             selectedAccounts: [],
@@ -41,7 +41,7 @@ class NewBudget extends Component {
             startDate: moment().format('YYYY-MM-DD[T]HH:mm'),
             endDate: moment().format('YYYY-MM-DD[T]HH:mm'),
             amount: 0,
-            categoryIds: [],
+            selectedCategories: [],
             accounts: [],
             categories: [],
             errors: {
@@ -51,7 +51,7 @@ class NewBudget extends Component {
                 startDate: false,
                 endDate: false,
                 amount: false,
-                categoryIds: false
+                selectedCategories: false
             }
         }
     }
@@ -62,70 +62,120 @@ class NewBudget extends Component {
     }
 
     loadAccounts = (accounts) => {
-        this.setState({...this.state, accounts: {accountId: 0, name: 'All'}, accounts})
+        accounts.unshift({ accountId: 0, name: 'All' });
+        this.setState({ ...this.state, accounts })
     }
 
     loadCategories = (categories) => {
-        this.setState({...this.state, categories: [ {categoryId: 0, name: 'All'}, categories]});
+        categories.unshift({ categoryId: 0, name: 'All' });
+        this.setState({ ...this.state, categories });
     }
 
-    handleChangeProperty (property, e) {
+    handleChangeProperty(property, e) {
         let value = e.target.value;
-        // if (property === "accountIds") {
-        //     let options = e.target.value;
-        //     value = [];
-        //     console.log(options.length);
-        //     for (let i = 0; i < options.length; i++) {
-        //         if(options[i].selected) {
-        //             value.push(options[i].accountId);
-        //         }
-        //     }
-        // }
-
-        this.setState({...this.state, [property]: value});
+        console.log(value);
+        if (property === "selectedAccounts") {
+            let all = value.find(m => m.accountId === 0);
+            if (all !== null && all !== undefined) {
+                value = this.state.accounts;
+            }
+        }
+        else if (property === "selectedCategories") {
+            let all = value.find(m => m.categoryId === 0);
+            console.log(all);
+            if (all !== null && all !== undefined) {
+                value = this.state.categories;
+            }
+        }
+        this.setState({ ...this.state, [property]: value });
     }
 
-    handleSave = () => {}
+    formatCurrency(e) {
+        let value = formatMoney(this.state.amount);
+        this.setState({ ...this.state, "amount": value });
+    }
 
-    render () {
+    handleSave = () => { }
+
+    render() {
         return (
             <>
-            <MyToolbar 
-                onBack={() => {this.props.history.goBack()}}
-                showBackButton={true}
-                title="Add budget"
-                buttons={[
-                    (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
-                ]}
-            />
-            <div className="content">
-                <TextField
-                    error={this.state.errors.name}
-                    label="Name"
-                    value={this.state.name}
-                    onChange={this.handleChangeProperty.bind(this, 'name')}
-                    margin="normal"
-                    className="form-control"
+                <MyToolbar
+                    onBack={() => { this.props.history.goBack() }}
+                    showBackButton={true}
+                    title="Add budget"
+                    buttons={[
+                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
+                    ]}
                 />
-                <FormControl className="form-control" margin="normal">
-                    <InputLabel>Accounts</InputLabel>
-                    <Select
-                        error={this.state.errors.account}
-                        multiple
-                        value={this.state.selectedAccounts}
-                        onChange={this.handleChangeProperty.bind(this, 'selectedAccounts')}
-                        input={<Input id="select-multiple-checkbox" />}
-                        renderValue={selected => {console.log(selected);selected.join(', ')}}
-                        MenuProps={styles.menuProps}>
-                        {this.state.accounts.map(account => (
-                            <MenuItem key={account.accountId} value={account.accountId}>
-                                <Checkbox checked={this.state.selectedAccounts.map(f => {return f.accountId}).indexOf(account.accountId) > -1} />
-                                <ListItemText primary={account.name} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </div>
+                <div className="content">
+                    <TextField
+                        error={this.state.errors.name}
+                        label="Name"
+                        value={this.state.name}
+                        onChange={this.handleChangeProperty.bind(this, 'name')}
+                        margin="normal"
+                        className="form-control"
+                    />
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Accounts</InputLabel>
+                        <Select
+                            error={this.state.errors.account}
+                            multiple
+                            value={this.state.selectedAccounts}
+                            onChange={this.handleChangeProperty.bind(this, 'selectedAccounts')}
+                            input={<Input id="select-multiple-checkbox" />}
+                            renderValue={(selected) => selected.map(i => { return i.name }).join(",")}
+                            MenuProps={styles.menuProps}>
+                            {this.state.accounts.map((account, index) => (
+                                <MenuItem key={index} value={account}>
+                                    <Checkbox checked={this.state.selectedAccounts.map(f => { return f.accountId }).indexOf(account.accountId) > -1} />
+                                    <ListItemText primary={account.name} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        error={this.state.errors.amount}
+                        label="Amount"
+                        value={this.state.amount}
+                        onChange={this.handleChangeProperty.bind(this, 'amount')}
+                        margin="normal"
+                        className="form-control"
+                        onBlur={this.formatCurrency.bind(this)}
+                    />
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            error={this.state.errors.selectedCategories}
+                            multiple
+                            value={this.state.selectedCategories}
+                            onChange={this.handleChangeProperty.bind(this, 'selectedCategories')}
+                            input={<Input id="select-multiple-checkbox" />}
+                            renderValue={(selected) => selected.map(i => { return i.name }).join(",")}
+                            MenuProps={styles.menuProps}>
+                            {this.state.categories.map((category, index) => (
+                                <MenuItem key={index} value={category}>
+                                    <Checkbox checked={this.state.selectedCategories.map(f => { return f.categoryId }).indexOf(category.categoryId) > -1} />
+                                    <ListItemText primary={category.name} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Repeat</InputLabel>
+                        <Select
+                            error={this.state.errors.repeat}
+                            value={this.state.repeat}
+                            onChange={this.handleChangeProperty.bind(this, 'repeat')}>
+                            <MenuItem value={budgetRepeatEnum.none}>None</MenuItem>
+                            <MenuItem value={budgetRepeatEnum.daily}>Daily</MenuItem>
+                            <MenuItem value={budgetRepeatEnum.weekly}>Weekly</MenuItem>
+                            <MenuItem value={budgetRepeatEnum.monthly}>Monthly</MenuItem>
+                            <MenuItem value={budgetRepeatEnum.custom}>Custom</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
             </>
         )
     }

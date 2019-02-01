@@ -163,6 +163,12 @@ class EditExpense extends Component {
                 var store = transaction.objectStore("expense");
                 store.put(data);
                 transaction.oncomplete = function (event) {
+                    let filter = {
+                        from: moment(data.date).hours(0).minutes(0).seconds(0),
+                        to: moment(data.date).hours(0).hours(23).minutes(59).seconds(59),
+                        viewType: 'daily'
+                    };
+                    localStorage.setItem("expensefilter", JSON.stringify(filter));
                     self.props.history.push("/expense");
                 }
             }
