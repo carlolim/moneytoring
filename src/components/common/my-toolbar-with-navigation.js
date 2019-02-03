@@ -56,7 +56,7 @@ class MyToolbarWithNavigation extends Component {
             <Typography variant="h6" color="inherit" style={styles.grow}>
                 {this.props.title}
             </Typography>
-            {this.props.buttons.map((item, index) => <span key={index}>{item}</span>)}
+            {this.props.buttons.map((item, index) => <span color="inherit" key={index}>{item}</span>)}
           </Toolbar>
         </AppBar>
       </div>

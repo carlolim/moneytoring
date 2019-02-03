@@ -9,6 +9,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { selectAll, insert } from "../../helpers";
 
 
 class NewExpense extends Component {
@@ -34,36 +35,12 @@ class NewExpense extends Component {
     }
 
     componentDidMount() {
-        this.loadAccounts(this);
-        this.loadCategories(this);
-    }
-
-    loadAccounts = (component) => {
-        const requestDatabase = indexedDB.open("Moneytoring");
-        requestDatabase.onsuccess = function (event) {
-            var db = event.target.result;
-            var transaction = db.transaction(["account"], "readonly");
-
-            var accountStore = transaction.objectStore("account");
-            var selectAccounts = accountStore.getAll();
-            transaction.oncomplete = function (event) {
-                component.setState({ ...component.state, accounts: selectAccounts.result });
-            }
-        }
-    }
-
-    loadCategories = (component) => {
-        const requestDatabase = indexedDB.open("Moneytoring");
-        requestDatabase.onsuccess = function (event) {
-            var db = event.target.result;
-            var transaction = db.transaction(["category"], "readonly");
-
-            var categoryStore = transaction.objectStore("category");
-            var selectcategory = categoryStore.getAll();
-            transaction.oncomplete = function (event) {
-                component.setState({ ...component.state, categories: selectcategory.result });
-            }
-        }
+        selectAll("account", (accounts) => {
+            this.setState({ ...this.state, accounts });
+        });
+        selectAll("category", (categories) => {
+            this.setState({ ...this.state, categories });
+        });
     }
 
     handleChangeProperty(property, e) {
@@ -123,13 +100,8 @@ class NewExpense extends Component {
             this.setState({ ...this.state, errors });
         }
         else {
-            const requestDatabase = indexedDB.open("Moneytoring");
-            requestDatabase.onsuccess = (event) => {
-                var db = event.target.result;
-                var transaction = db.transaction("expense", "readwrite");
-                var store = transaction.objectStore("expense");
-                store.put(data);
-                transaction.oncomplete = (event) => {
+            insert("expense", data, (success) => {
+                if (success) {
                     let filter = {
                         from: moment(data.date).hours(0).minutes(0).seconds(0),
                         to: moment(data.date).hours(0).hours(23).minutes(59).seconds(59),
@@ -138,7 +110,7 @@ class NewExpense extends Component {
                     localStorage.setItem("expensefilter", JSON.stringify(filter));
                     this.props.history.push("/expense");
                 }
-            }
+            })
         }
     }
 

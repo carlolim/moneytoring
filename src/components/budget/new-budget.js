@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
 import { formatMoney, budgetRepeatEnum } from "../../helpers";
-import { selectAll } from "../../helpers";
+import { selectAll, insert } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Save from '@material-ui/icons/Save';
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import { MenuItem, Input, Checkbox, ListItemText } from "@material-ui/core";
+import { MenuItem, Input, Checkbox, ListItemText, Switch, FormControlLabel } from "@material-ui/core";
 
 
 const styles = {
@@ -37,13 +37,15 @@ class NewBudget extends Component {
             name: '',
             selectedAccounts: [],
             isActive: true,
+            spen: 0,
             repeat: budgetRepeatEnum.none,
             startDate: moment().format('YYYY-MM-DD[T]HH:mm'),
-            endDate: moment().format('YYYY-MM-DD[T]HH:mm'),
-            amount: 0,
+            endDate: '',//moment().format('YYYY-MM-DD[T]HH:mm'),
+            amount: '0',
             selectedCategories: [],
             accounts: [],
             categories: [],
+            noEndDate: false,
             errors: {
                 name: false,
                 selectedAccounts: false,
@@ -53,6 +55,66 @@ class NewBudget extends Component {
                 amount: false,
                 selectedCategories: false
             }
+        }
+    }
+
+    handleSave = () => {
+        var data = {
+            name: this.state.name,
+            accountIds: this.state.selectedAccounts.map(m => m.accountId),
+            categoryIds: this.state.selectedCategories.map(m => m.categoryId),
+            amount:  parseFloat(this.state.amount.replace(/,/g, '')),
+            repeat: this.state.repeat,
+            startDate: this.state.startDate,
+            noEndDate: this.state.noEndDate,
+            endDate: this.state.endDate,
+            isActive: true,
+            spent: 0
+        };
+        let hasError = false;
+        let errors = {
+            name: false,
+            selectedAccounts: false,
+            repeat: false,
+            startDate: false,
+            endDate: false,
+            amount: false,
+            selectedCategories: false
+        }
+        if (data.name === '') {
+            hasError = true;
+            errors.name = true;
+        }
+        if (data.accountIds === null || data.accountIds === undefined || data.accountIds.length === 0) {
+                hasError = true;
+                errors.selectedAccounts = true;
+        }
+        if (data.categoryIds === null || data.categoryIds === undefined || data.categoryIds.length === 0) {
+                hasError = true;
+                errors.selectedCategories = true;
+        }
+        if (data.amount === 0 || isNaN(data.amount)) {
+            errors.amount = true;
+            hasError = true;
+        }
+        if (!this.state.startDate || this.state.startDate === '') {
+            hasError = true;
+            errors.startDate = true;
+        }
+        if (!data.noEndDate && (!this.state.endDate || this.state.endDate === '')) {
+            hasError = true;
+            errors.endDate = true;
+        }
+
+        if (hasError) {
+            this.setState({...this.state, errors});
+        }
+        else {
+            insert("budget", data, (success) => {
+                if (success) {
+                    this.props.history.push("/budget");
+                }
+            });
         }
     }
 
@@ -73,7 +135,6 @@ class NewBudget extends Component {
 
     handleChangeProperty(property, e) {
         let value = e.target.value;
-        console.log(value);
         if (property === "selectedAccounts") {
             let all = value.find(m => m.accountId === 0);
             if (all !== null && all !== undefined) {
@@ -82,9 +143,14 @@ class NewBudget extends Component {
         }
         else if (property === "selectedCategories") {
             let all = value.find(m => m.categoryId === 0);
-            console.log(all);
             if (all !== null && all !== undefined) {
                 value = this.state.categories;
+            }
+        }
+        else if (property === "noEndDate") {
+            value = value === "true";
+            if (value) {
+                this.setState({...this.state, endDate: ''});
             }
         }
         this.setState({ ...this.state, [property]: value });
@@ -94,8 +160,6 @@ class NewBudget extends Component {
         let value = formatMoney(this.state.amount);
         this.setState({ ...this.state, "amount": value });
     }
-
-    handleSave = () => { }
 
     render() {
         return (
@@ -120,7 +184,7 @@ class NewBudget extends Component {
                     <FormControl className="form-control" margin="normal">
                         <InputLabel>Accounts</InputLabel>
                         <Select
-                            error={this.state.errors.account}
+                            error={this.state.errors.selectedAccounts}
                             multiple
                             value={this.state.selectedAccounts}
                             onChange={this.handleChangeProperty.bind(this, 'selectedAccounts')}
@@ -175,6 +239,38 @@ class NewBudget extends Component {
                             <MenuItem value={budgetRepeatEnum.custom}>Custom</MenuItem>
                         </Select>
                     </FormControl>
+                    <TextField
+                        error={this.state.errors.startDate}
+                        label="Start date"
+                        type="datetime-local"
+                        margin="normal"
+                        className="form-control"
+                        value={this.state.startDate}
+                        onChange={this.handleChangeProperty.bind(this, 'startDate')}
+                    />
+
+                    <TextField
+                        error={this.state.errors.endDate}
+                        label="End date"
+                        type="datetime-local"
+                        margin="normal"
+                        className="form-control"
+                        disabled={this.state.noEndDate}
+                        value={this.state.endDate}
+                        onChange={this.handleChangeProperty.bind(this, 'endDate')}
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={this.state.noEndDate}
+                                onChange={this.handleChangeProperty.bind(this, 'noEndDate')}
+                                value={!this.state.noEndDate}
+                                color="primary"
+                            />
+                        }
+                        label="no end date"
+                    />
                 </div>
             </>
         )

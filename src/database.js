@@ -40,6 +40,8 @@ export const initialize = () => {
             budgetTable.createIndex("accountIds", "accountIds", { unique: false});
             budgetTable.createIndex("isActive", "isActive", { unique: false});
             budgetTable.createIndex("categoryIds", "categoryIds", { unique: false});
+            budgetTable.createIndex("spent", "spent", { unique: false});
+            budgetTable.createIndex("noEndDate", "noEndDate", { unique: false});
         }
     }
 
