@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
-import { Typography, Fab, LinearProgress, Select, MenuItem } from "@material-ui/core";
+import { Typography, Fab, Select, MenuItem } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { selectAll } from "../../helpers";
 import { formatMoney, budgetRepeatEnum } from "../../helpers";
+import BudgetSummary from "../dashboard/widgets/budget-summary";
 
 
 const styles = {
@@ -17,24 +18,6 @@ const styles = {
     filter: {
         color: '#fff',
         borderColor: '#fff'
-    },
-    progressGreen: {
-        backgroundColor: '#b2dfdb'
-    },
-    progressBarGreen: {
-        backgroundColor: '#00695c'
-    },
-    progressYellow: {
-        backgroundColor: '#eaec60'
-    },
-    progressBarYellow: {
-        backgroundColor: '#bfc11d'
-    },
-    progressRed: {
-        backgroundColor: '#ec8686'
-    },
-    progressBarRed: {
-        backgroundColor: '#de0b0b'
     }
 }
 
@@ -86,9 +69,7 @@ class Budget extends Component {
                     </Select>
                 ]} />
                 <div className="content">
-                    <LinearProgress variant="determinate" value={this.state.percent}
-                        classes={this.progressBarClassName(this.state.percent)}
-                    />
+                    {this.state.items.map((item, i) => <BudgetSummary key={i} budget={item} />)}
                 </div>
                 <Fab onClick={() => { this.props.history.push('budget/new') }} color="primary" className={this.props.classes.fab}>
                     <AddIcon />
