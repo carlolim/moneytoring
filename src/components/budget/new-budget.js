@@ -113,8 +113,8 @@ class NewBudget extends Component {
 
             if (!data.repeat) {
                 data.ledger.push({
-                    startDate: data.startDate,
-                    endDate: data.endDate,
+                    startDate: moment(data.startDate).startOf("day").toDate(),
+                    endDate: moment(data.endDate).endOf("day").toDate(),
                     spent: 0,
                     amount: data.amount
                 });

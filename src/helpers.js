@@ -1,3 +1,5 @@
+import moment from "moment";
+
 
 export const formatMoney = (n, c, d, t) => {
   var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -62,18 +64,17 @@ export const budgetRepeatEnum = {
 
 export const addSpentToBudget = (expense) => {
   selectAll("budget", (budgets) => {
+    let validBudgets = [];
     for (var i = 0; i < budgets.length; i++) {
-      if (budgets[i].startDate < expense.date) {
-        continue;
-      }
-      else if (!budgets[i].noEndDate && budgets[i].endDate < expense.date) {
-        continue;
-      }
-
-      if ((budgets[i].accountIds.includes(expense.accountId) || budgets[i].accountIds.includes(0)) &&
-        (budgets[i].categoryIds.includes(expense.accountId) || budgets[i].categoryIds.includes(0))) {
-
+      let budget = budgets[i];
+      if ((budget.categoryIds.indexOf(expense.categoryId) !== -1 || budget.categoryIds.indexOf(0) !== -1) &&
+          (budget.accountIds.indexOf(expense.accountId) !== -1 || budget.accountIds.indexOf(0) !== -1) &&
+          (moment(budget.startDate).startOf("day").toDate() <= expense.date && 
+          (budget.noEndDate || moment(budget.endDate).endOf("day").toDate() >= expense.date))
+        ) {
+            validBudgets.push(budget);
       }
     }
+    console.log(validBudgets);
   });
 }

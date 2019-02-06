@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
-import { formatMoney } from "../../helpers";
+import { formatMoney, addSpentToBudget } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Save from '@material-ui/icons/Save';
 import TextField from "@material-ui/core/TextField";
@@ -101,6 +101,7 @@ class NewExpense extends Component {
         }
         else {
             insert("expense", data, (success) => {
+                addSpentToBudget(data);
                 if (success) {
                     let filter = {
                         from: moment(data.date).hours(0).minutes(0).seconds(0),

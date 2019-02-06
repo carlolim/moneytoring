@@ -46,39 +46,26 @@ class Budget extends Component {
                 start: moment().startOf("day"),
                 end: moment().endOf("day"),
                 items: []
-            }
+            },
+            display: 'all'
         }
     }
 
     componentDidMount = () => {
         selectAll("budget", (items) => {
-            let today = moment();
             let daily = [];
             let weekly = [];
             let monthly = [];
             let nonRepeating = [];
             for (var i = 0; i < items.length; i++) {
                 let budget = items[i];
-
-                if (budget.repeat === budgetRepeatEnum.daily) {
-                    let ledger = this.validateBudget("day", budget);
-                    if (ledger != null){
+                if (budget.repeat) {
+                    let ledger = this.validateBudget(budget);
+                    if (ledger != null) {
                         budget.ledger = [ledger];
-                        daily.push(budget);
-                    }
-                }
-                else if (budget.repeat === budgetRepeatEnum.weekly) {
-                    let ledger = this.validateBudget("week", budget);
-                    if (ledger != null){
-                        budget.ledger = [ledger];
-                        weekly.push(budget);
-                    }
-                }
-                else if (budget.repeat === budgetRepeatEnum.monthly) {
-                    let ledger = this.validateBudget("month", budget);
-                    if (ledger != null){
-                        budget.ledger = [ledger];
-                        monthly.push(budget);
+                        if (budget.repeat === budgetRepeatEnum.daily) daily.push(budget);
+                        else if (budget.repeat === budgetRepeatEnum.weekly) weekly.push(budget);
+                        else if (budget.repeat === budgetRepeatEnum.monthly) monthly.push(budget);
                     }
                 }
                 else {
@@ -95,14 +82,20 @@ class Budget extends Component {
         });
     }
 
-    validateBudget = (type, budget) => {
-        if (moment(budget.startDate).startOf(type).toDate() <= moment().startOf(type).toDate() &&
-            (budget.noEndDate || moment(budget.endDate).endOf(type).toDate() >= moment().endOf(type))) {
-            let ledger = budget.ledger.find(m => m.startDate.toString() === moment().startOf(type).toDate().toString() && m.endDate.toString() === moment().endOf(type).toDate().toString());
-            if (ledger === undefined || ledger === null) {
-                ledger = { startDate: moment().startOf(type), endDate: moment().endOf(type), spent: 0, amount: budget.amount };
+    validateBudget = (budget) => {
+        let type;
+        if (budget.repeat === budgetRepeatEnum.daily) type = "day";
+        else if (budget.repeat === budgetRepeatEnum.weekly) type = "week";
+        else if (budget.repeat === budgetRepeatEnum.monthly) type = "month";
+        if (type) {
+            if (moment(budget.startDate).startOf(type).toDate() <= moment().startOf(type).toDate() &&
+                (budget.noEndDate || moment(budget.endDate).endOf(type).toDate() >= moment().endOf(type))) {
+                let ledger = budget.ledger.find(m => m.startDate.toString() === moment().startOf(type).toDate().toString() && m.endDate.toString() === moment().endOf(type).toDate().toString());
+                if (ledger === undefined || ledger === null) {
+                    ledger = { startDate: moment().startOf(type), endDate: moment().endOf(type), spent: 0, amount: budget.amount };
+                }
+                return ledger;
             }
-            return ledger;
         }
         return null;
     }
@@ -123,26 +116,42 @@ class Budget extends Component {
         return result;
     }
 
+    changeDisplay = (event) => {
+        this.setState({ ...this.state, display: event.target.value });
+    }
+
     render() {
         return (
             <>
                 <MyToolbarWithNavigation title="Budget" buttons={[
                     <Select
                         className={this.props.classes.filter}
-                        value={0}>
-                        <MenuItem value={budgetRepeatEnum.none}>All</MenuItem>
-                        <MenuItem value={budgetRepeatEnum.daily}>Daily</MenuItem>
-                        <MenuItem value={budgetRepeatEnum.weekly}>Weekly</MenuItem>
-                        <MenuItem value={budgetRepeatEnum.monthly}>Monthly</MenuItem>
-                        <MenuItem value={budgetRepeatEnum.custom}>Custom</MenuItem>
+                        value="all" onChange={this.changeDisplay.bind(this)}>
+                        <MenuItem value="all">All</MenuItem>
+                        <MenuItem value="daily">Daily</MenuItem>
+                        <MenuItem value="weekly">Weekly</MenuItem>
+                        <MenuItem value="monthly">Monthly</MenuItem>
                     </Select>
                 ]} />
 
-                {this.state.nonRepeating.items.map((item, i) => <div key={i} className="content"><BudgetSummary budget={item} /></div>)}
+                {this.state.display === 'all' ?
+                    this.state.nonRepeating.items.map((item, i) =>
+                        <div key={i} className="content">
+                            <BudgetSummary budget={{ name: item.name, spent: item.ledger[0].spent, amount: item.ledger[0].amount }} />
+                        </div>
+                    ) : null}
 
-                <RenderItems items={this.state.daily.items} label="Daily" classes={this.props.classes} />
-                <RenderItems items={this.state.weekly.items} label="Weekly" classes={this.props.classes} />
-                <RenderItems items={this.state.monthly.items} label="Monthly" classes={this.props.classes} />
+                {this.state.display === 'all' || this.state.display === 'daily' ?
+                    <RenderItems items={this.state.daily.items} label="Daily" classes={this.props.classes} />
+                    : null}
+
+                {this.state.display === 'all' || this.state.display === 'weekly' ?
+                    <RenderItems items={this.state.weekly.items} label="Weekly" classes={this.props.classes} />
+                    : null}
+
+                {this.state.display === 'all' || this.state.display === 'monthly' ?
+                    <RenderItems items={this.state.monthly.items} label="Monthly" classes={this.props.classes} />
+                    : null}
 
                 <Fab onClick={() => { this.props.history.push('budget/new') }} color="primary" className={this.props.classes.fab}>
                     <AddIcon />
