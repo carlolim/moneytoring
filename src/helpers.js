@@ -59,3 +59,21 @@ export const budgetRepeatEnum = {
   monthly: 3,
   custom: 4
 }
+
+export const addSpentToBudget = (expense) => {
+  selectAll("budget", (budgets) => {
+    for (var i = 0; i < budgets.length; i++) {
+      if (budgets[i].startDate < expense.date) {
+        continue;
+      }
+      else if (!budgets[i].noEndDate && budgets[i].endDate < expense.date) {
+        continue;
+      }
+
+      if ((budgets[i].accountIds.includes(expense.accountId) || budgets[i].accountIds.includes(0)) &&
+        (budgets[i].categoryIds.includes(expense.accountId) || budgets[i].categoryIds.includes(0))) {
+
+      }
+    }
+  });
+}

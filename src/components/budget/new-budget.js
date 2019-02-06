@@ -35,7 +35,7 @@ class NewBudget extends Component {
         super(props);
         this.state = {
             name: '',
-            selectedAccounts: [],
+            selectedAccounts: [{name: 'All', accountId: 0}],
             isActive: true,
             spen: 0,
             repeat: budgetRepeatEnum.none,
@@ -65,7 +65,7 @@ class NewBudget extends Component {
             categoryIds: this.state.selectedCategories.map(m => m.categoryId),
             amount:  parseFloat(this.state.amount.replace(/,/g, '')),
             repeat: this.state.repeat,
-            startDate: this.state.startDate,
+            startDate: new Date(this.state.startDate),
             noEndDate: this.state.noEndDate,
             endDate: this.state.endDate,
             isActive: true,
@@ -110,6 +110,11 @@ class NewBudget extends Component {
             this.setState({...this.state, errors});
         }
         else {
+            if (!data.noEndDate)
+                data.endDate = new Date(data.endDate);
+            else
+                data.endDate = null;
+                
             insert("budget", data, (success) => {
                 if (success) {
                     this.props.history.push("/budget");
