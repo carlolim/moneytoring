@@ -35,11 +35,10 @@ class NewBudget extends Component {
         super(props);
         this.state = {
             name: '',
-            selectedAccounts: [{name: 'All', accountId: 0}],
+            selectedAccounts: [{ name: 'All', accountId: 0 }],
             isActive: true,
-            spen: 0,
             repeat: budgetRepeatEnum.none,
-            startDate: moment().format('YYYY-MM-DD[T]HH:mm'),
+            startDate: '', //moment().format('YYYY-MM-DD[T]HH:mm'),
             endDate: '',//moment().format('YYYY-MM-DD[T]HH:mm'),
             amount: '0',
             selectedCategories: [],
@@ -63,13 +62,13 @@ class NewBudget extends Component {
             name: this.state.name,
             accountIds: this.state.selectedAccounts.map(m => m.accountId),
             categoryIds: this.state.selectedCategories.map(m => m.categoryId),
-            amount:  parseFloat(this.state.amount.replace(/,/g, '')),
+            amount: parseFloat(this.state.amount.replace(/,/g, '')),
             repeat: this.state.repeat,
             startDate: new Date(this.state.startDate),
             noEndDate: this.state.noEndDate,
             endDate: this.state.endDate,
             isActive: true,
-            spent: 0
+            ledger: []
         };
         let hasError = false;
         let errors = {
@@ -86,12 +85,12 @@ class NewBudget extends Component {
             errors.name = true;
         }
         if (data.accountIds === null || data.accountIds === undefined || data.accountIds.length === 0) {
-                hasError = true;
-                errors.selectedAccounts = true;
+            hasError = true;
+            errors.selectedAccounts = true;
         }
         if (data.categoryIds === null || data.categoryIds === undefined || data.categoryIds.length === 0) {
-                hasError = true;
-                errors.selectedCategories = true;
+            hasError = true;
+            errors.selectedCategories = true;
         }
         if (data.amount === 0 || isNaN(data.amount)) {
             errors.amount = true;
@@ -107,14 +106,29 @@ class NewBudget extends Component {
         }
 
         if (hasError) {
-            this.setState({...this.state, errors});
+            this.setState({ ...this.state, errors });
         }
         else {
-            if (!data.noEndDate)
-                data.endDate = new Date(data.endDate);
-            else
-                data.endDate = null;
-                
+            data.endDate = (data.noEndDate) ? null : new Date(data.endDate);
+
+            if (!data.repeat) {
+                data.ledger.push({
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    spent: 0,
+                    amount: data.amount
+                });
+            }
+            //TEST DATA
+            else {
+                data.ledger.push({
+                    startDate: moment(data.startDate).startOf("day").toDate(),
+                    endDate: moment(data.startDate).endOf("day").toDate(),
+                    spent: 50,
+                    amount: data.amount
+                })
+            }
+            //END TEST DATA
             insert("budget", data, (success) => {
                 if (success) {
                     this.props.history.push("/budget");
@@ -155,7 +169,7 @@ class NewBudget extends Component {
         else if (property === "noEndDate") {
             value = value === "true";
             if (value) {
-                this.setState({...this.state, endDate: ''});
+                this.setState({ ...this.state, endDate: '' });
             }
         }
         this.setState({ ...this.state, [property]: value });
@@ -247,7 +261,7 @@ class NewBudget extends Component {
                     <TextField
                         error={this.state.errors.startDate}
                         label="Start date"
-                        type="datetime-local"
+                        type="date"
                         margin="normal"
                         className="form-control"
                         value={this.state.startDate}
@@ -257,7 +271,7 @@ class NewBudget extends Component {
                     <TextField
                         error={this.state.errors.endDate}
                         label="End date"
-                        type="datetime-local"
+                        type="date"
                         margin="normal"
                         className="form-control"
                         disabled={this.state.noEndDate}

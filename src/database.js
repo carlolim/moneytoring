@@ -40,7 +40,7 @@ export const initialize = () => {
             budgetTable.createIndex("accountIds", "accountIds", { unique: false});
             budgetTable.createIndex("isActive", "isActive", { unique: false});
             budgetTable.createIndex("categoryIds", "categoryIds", { unique: false});
-            budgetTable.createIndex("spent", "spent", { unique: false});
+            budgetTable.createIndex("ledger", "ledger", { unique: false});
             budgetTable.createIndex("noEndDate", "noEndDate", { unique: false});
         }
     }
@@ -48,9 +48,9 @@ export const initialize = () => {
     request.onsuccess = function (event) {
         var db = event.target.result;
 
-        //--------------------------------
+        //---------------------------------------
         //create default account (personal)
-        //--------------------------------
+        //---------------------------------------
         var transaction = db.transaction(["account"], "readonly");
         var accountStore = transaction.objectStore("account");
         var selectAccounts = accountStore.getAll();
