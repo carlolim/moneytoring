@@ -5,7 +5,7 @@ import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import { Typography, Fab, Select, MenuItem, Divider } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { selectAll } from "../../helpers";
-import { formatMoney, budgetRepeatEnum } from "../../helpers";
+import { formatMoney, budgetRepeatEnum, getBudgetRepeatTypeForMoment } from "../../helpers";
 import BudgetSummary from "../dashboard/widgets/budget-summary";
 import moment from "moment";
 
@@ -50,7 +50,7 @@ class Budget extends Component {
             display: 'all'
         }
     }
-
+    
     componentDidMount = () => {
         selectAll("budget", (items) => {
             let daily = [];
@@ -83,10 +83,7 @@ class Budget extends Component {
     }
 
     validateBudget = (budget) => {
-        let type;
-        if (budget.repeat === budgetRepeatEnum.daily) type = "day";
-        else if (budget.repeat === budgetRepeatEnum.weekly) type = "week";
-        else if (budget.repeat === budgetRepeatEnum.monthly) type = "month";
+        let type = getBudgetRepeatTypeForMoment(budget);
         if (type) {
             if (moment(budget.startDate).startOf(type).toDate() <= moment().startOf(type).toDate() &&
                 (budget.noEndDate || moment(budget.endDate).endOf(type).toDate() >= moment().endOf(type))) {
