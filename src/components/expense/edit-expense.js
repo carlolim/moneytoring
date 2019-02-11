@@ -38,10 +38,10 @@ class EditExpense extends Component {
     }
 
     componentDidMount () {
-        selectAll("account", (accounts) => {
+        selectAll("account").then((accounts) => {
             this.setState({ ...this.state, accounts });
         });
-        selectAll("category", (categories) => {
+        selectAll("category").then((categories) => {
             this.setState({ ...this.state, categories });
         });
         this.loadExpense(this.state.expenseId, this);

@@ -3,10 +3,11 @@ import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
-import { formatMoney, budgetRepeatEnum, selectAllWhereDateBetween } from "../../helpers";
-import { selectAll, insert } from "../../helpers";
+import { formatMoney, budgetRepeatEnum } from "../../helpers";
+import { select, selectAll, update } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Save from '@material-ui/icons/Save';
+import Delete from '@material-ui/icons/Delete';
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -30,10 +31,11 @@ const styles = {
     }
 }
 
-class NewBudget extends Component {
+class EditBudget extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            budgetId: Number(this.props.match.params.id),
             name: '',
             selectedAccounts: [{ name: 'All', accountId: 0 }],
             isActive: true,
@@ -55,6 +57,32 @@ class NewBudget extends Component {
                 selectedCategories: false
             }
         }
+    }
+
+    componentDidMount = () => {
+        selectAll("account").then((accounts) => {
+            accounts.unshift({ accountId: 0, name: 'All' });
+            this.setState({ ...this.state, accounts });
+            selectAll("category").then((categories) => {
+                categories.unshift({ categoryId: 0, name: 'All' });
+                this.setState({ ...this.state, categories });
+                select("budget", this.state.budgetId).then((budget) => {
+                    this.setState({
+                        ...this.state,
+                        name: budget.name,
+                        selectedAccounts: budget.accountIds.map(a => accounts.find(m => {return m.accountId===a})),
+                        isActive: budget.isActive,
+                        repeat: budget.repeat,
+                        startDate: moment(budget.startDate).format('YYYY-MM-DD'),
+                        endDate: moment(budget.endDate).format('YYYY-MM-DD'),
+                        amount: budget.amount,
+                        selectedCategories: budget.categoryIds.map(a => categories.find(m => {return m.categoryId===a})),
+                        noEndDate: budget.noEndDate,
+                        ledger: budget.ledger
+                    });
+                });
+            });
+        });
     }
 
     handleSave = () => {
@@ -119,8 +147,8 @@ class NewBudget extends Component {
                     amount: data.amount
                 });
             }
-            
-            insert("budget", data, (success) => {
+
+            update("budget", data, (success) => {
                 if (success) {
                     this.props.history.push("/budget");
                 }
@@ -128,16 +156,6 @@ class NewBudget extends Component {
         }
     }
 
-    componentDidMount = () => {
-        selectAll("account").then((accounts) => {
-            accounts.unshift({ accountId: 0, name: 'All' });
-            this.setState({ ...this.state, accounts })
-        });
-        selectAll("category").then((categories) => {
-            categories.unshift({ categoryId: 0, name: 'All' });
-            this.setState({ ...this.state, categories });
-        });
-    }
     handleChangeProperty(property, e) {
         let value = e.target.value;
         if (property === "selectedAccounts") {
@@ -174,7 +192,8 @@ class NewBudget extends Component {
                     showBackButton={true}
                     title="Add budget"
                     buttons={[
-                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
+                        (<IconButton onClick={() => {alert(1)}}  color="inherit"><Delete /></IconButton>),
+                        (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
                     ]}
                 />
                 <div className="content">
@@ -282,8 +301,8 @@ class NewBudget extends Component {
     }
 }
 
-NewBudget.propTypes = {
+EditBudget.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(NewBudget);
+export default withStyles(styles)(EditBudget);

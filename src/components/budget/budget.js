@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import { Typography, Fab, Select, MenuItem, Divider } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { selectAll } from "../../helpers";
-import { formatMoney, budgetRepeatEnum, getBudgetRepeatTypeForMoment } from "../../helpers";
+import { selectAll, select } from "../../helpers";
+import { budgetRepeatEnum } from "../../helpers";
+import { getBudgetRepeatTypeForMoment } from "../../modules/budget-module";
 import BudgetSummary from "../dashboard/widgets/budget-summary";
 import moment from "moment";
 
@@ -50,9 +51,9 @@ class Budget extends Component {
             display: 'all'
         }
     }
-    
+
     componentDidMount = () => {
-        selectAll("budget", (items) => {
+        selectAll("budget").then((items) => {
             let daily = [];
             let weekly = [];
             let monthly = [];
@@ -158,25 +159,21 @@ class Budget extends Component {
     }
 }
 
-class RenderItems extends Component {
-    render() {
-        return (
+const RenderItems = (props) => (
+    <>
+        {props.items.length > 0 ?
             <>
-                {this.props.items.length > 0 ?
-                    <>
-                        <Divider className={this.props.classes.divider} />
-                        <Typography variant="button" align="center">{this.props.label}</Typography>
-                        {this.props.items.map((item, i) =>
-                            <div key={i} className="content">
-                                <BudgetSummary budget={{ name: item.name, spent: item.ledger[0].spent, amount: item.ledger[0].amount }} />
-                            </div>
-                        )}
-                    </>
-                    : null}
+                <Divider className={props.classes.divider} />
+                <Typography variant="button" align="center">{props.label}</Typography>
+                {props.items.map((item, i) =>
+                    <div key={i} className="content">
+                        <BudgetSummary budget={{ name: item.name, spent: item.ledger[0].spent, amount: item.ledger[0].amount }} />
+                    </div>
+                )}
             </>
-        )
-    }
-}
+            : null}
+    </>
+)
 
 Budget.propTypes = {
     classes: PropTypes.object.isRequired

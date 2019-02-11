@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
-import { formatMoney, addSpentToBudget } from "../../helpers";
+import { formatMoney } from "../../helpers";
+import { addSpentToBudget } from "../../modules/budget-module";
 import IconButton from '@material-ui/core/IconButton';
 import Save from '@material-ui/icons/Save';
 import TextField from "@material-ui/core/TextField";
@@ -35,10 +36,10 @@ class NewExpense extends Component {
     }
 
     componentDidMount() {
-        selectAll("account", (accounts) => {
+        selectAll("account").then((accounts) => {
             this.setState({ ...this.state, accounts });
         });
-        selectAll("category", (categories) => {
+        selectAll("category").then((categories) => {
             this.setState({ ...this.state, categories });
         });
     }

@@ -1,6 +1,6 @@
 
 export const initialize = () => {
-    var request = window.indexedDB.open("Moneytoring", 3);
+    var request = window.indexedDB.open("Moneytoring", 5);
     
     request.onupgradeneeded = function(event) {
         var db = event.target.result;
