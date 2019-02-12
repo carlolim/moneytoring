@@ -7,7 +7,7 @@ import { Typography, Fab, Select, MenuItem, Divider } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { selectAll } from "../../helpers";
 import { budgetRepeatEnum } from "../../helpers";
-import { getBudgetRepeatTypeForMoment } from "../../modules/budget-module";
+import { validateBudget } from "../../modules/budget-module";
 import BudgetSummary from "../dashboard/widgets/budget-summary";
 import moment from "moment";
 
@@ -62,7 +62,7 @@ class Budget extends Component {
             for (var i = 0; i < items.length; i++) {
                 let budget = items[i];
                 if (budget.repeat) {
-                    let ledger = this.validateBudget(budget);
+                    let ledger = validateBudget(budget);
                     if (ledger != null) {
                         budget.ledger = [ledger];
                         if (budget.repeat === budgetRepeatEnum.daily) daily.push(budget);
@@ -84,38 +84,7 @@ class Budget extends Component {
             });
         });
     }
-
-    validateBudget = (budget) => {
-        let type = getBudgetRepeatTypeForMoment(budget);
-        if (type) {
-            if (moment(budget.startDate).startOf(type).toDate() <= moment().startOf(type).toDate() &&
-                (budget.noEndDate || moment(budget.endDate).endOf(type).toDate() >= moment().endOf(type))) {
-                let ledger = budget.ledger.find(m => m.startDate.toString() === moment().startOf(type).toDate().toString() && m.endDate.toString() === moment().endOf(type).toDate().toString());
-                if (ledger === undefined || ledger === null) {
-                    ledger = { startDate: moment().startOf(type).toDate(), endDate: moment().endOf(type).toDate(), spent: 0, amount: budget.amount };
-                }
-                return ledger;
-            }
-        }
-        return null;
-    }
-
-    progressBarClassName = (percent) => {
-        let result = {
-            colorPrimary: this.props.classes.progressGreen,
-            barColorPrimary: this.props.classes.progressBarGreen
-        }
-        if (percent > 50 && percent <= 75) {
-            result.colorPrimary = this.props.classes.progressYellow;
-            result.barColorPrimary = this.props.classes.progressBarYellow;
-        }
-        else if (percent > 75) {
-            result.colorPrimary = this.props.classes.progressRed;
-            result.barColorPrimary = this.props.classes.progressBarRed;
-        }
-        return result;
-    }
-
+    
     changeDisplay = (event) => {
         this.setState({ ...this.state, display: event.target.value });
     }

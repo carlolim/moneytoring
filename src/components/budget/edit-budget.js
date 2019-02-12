@@ -46,6 +46,7 @@ class EditBudget extends Component {
             selectedCategories: [],
             accounts: [],
             categories: [],
+            showInDashboard: false,
             noEndDate: false,
             errors: {
                 name: false,
@@ -79,7 +80,8 @@ class EditBudget extends Component {
                         amount: formatMoney(budget.amount),
                         selectedCategories: budget.categoryIds.map(a => categories.find(m => { return m.categoryId === a })),
                         noEndDate: budget.noEndDate,
-                        ledger: budget.ledger
+                        ledger: budget.ledger,
+                        showInDashboard: budget.showInDashboard
                     });
                 });
             });
@@ -98,7 +100,8 @@ class EditBudget extends Component {
             noEndDate: this.state.noEndDate,
             endDate: this.state.endDate,
             isActive: true,
-            ledger: this.state.ledger
+            ledger: this.state.ledger,
+            showInDashboard: this.state.showInDashboard
         };
         let hasError = false;
         let errors = {
@@ -172,7 +175,7 @@ class EditBudget extends Component {
                 value = this.state.categories;
             }
         }
-        else if (property === "noEndDate") {
+        else if (property === "noEndDate" || property === "showInDashboard") {
             value = value === "true";
             if (value) {
                 this.setState({ ...this.state, endDate: '' });
@@ -306,6 +309,18 @@ class EditBudget extends Component {
                             />
                         }
                         label="no end date"
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={this.state.showInDashboard}
+                                onChange={this.handleChangeProperty.bind(this, 'showInDashboard')}
+                                value={!this.state.showInDashboard}
+                                color="primary"
+                            />
+                        }
+                        label="show widget on dashboard"
                     />
                 </div>
 

@@ -41,6 +41,7 @@ class NewBudget extends Component {
             startDate: '', //moment().format('YYYY-MM-DD[T]HH:mm'),
             endDate: '',//moment().format('YYYY-MM-DD[T]HH:mm'),
             amount: '0',
+            showInDashboard: false,
             selectedCategories: [],
             accounts: [],
             categories: [],
@@ -68,6 +69,7 @@ class NewBudget extends Component {
             noEndDate: this.state.noEndDate,
             endDate: this.state.endDate,
             isActive: true,
+            showInDashboard: this.state.showInDashboard,
             ledger: []
         };
         let hasError = false;
@@ -152,7 +154,7 @@ class NewBudget extends Component {
                 value = this.state.categories;
             }
         }
-        else if (property === "noEndDate") {
+        else if (property === "noEndDate" || property === "showInDashboard") {
             value = value === "true";
             if (value) {
                 this.setState({ ...this.state, endDate: '' });
@@ -275,6 +277,18 @@ class NewBudget extends Component {
                             />
                         }
                         label="no end date"
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={this.state.showInDashboard}
+                                onChange={this.handleChangeProperty.bind(this, 'showInDashboard')}
+                                value={!this.state.showInDashboard}
+                                color="primary"
+                            />
+                        }
+                        label="show widget on dashboard"
                     />
                 </div>
             </>
