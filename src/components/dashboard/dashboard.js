@@ -7,7 +7,6 @@ import AttachMoneyICon from "@material-ui/icons/AttachMoney";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import Backdrop from '@material-ui/core/Backdrop';
 import ExpenseSummary from "./widgets/expense-summary";
-import IncomeSummary from "./widgets/income-summary";
 
 
 const styles = {

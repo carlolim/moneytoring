@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
 import { formatMoney, budgetRepeatEnum } from "../../helpers";
-import { select, selectAll, update } from "../../helpers";
+import { select, selectAll, update, remove } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Save from '@material-ui/icons/Save';
 import Delete from '@material-ui/icons/Delete';
@@ -12,7 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import { MenuItem, Input, Checkbox, ListItemText, Switch, FormControlLabel } from "@material-ui/core";
+import { MenuItem, Input, Checkbox, ListItemText, Switch, FormControlLabel, DialogTitle, Dialog, Button, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
 
 
 const styles = {
@@ -55,7 +55,8 @@ class EditBudget extends Component {
                 endDate: false,
                 amount: false,
                 selectedCategories: false
-            }
+            },
+            showDelete: false
         }
     }
 
@@ -70,13 +71,13 @@ class EditBudget extends Component {
                     this.setState({
                         ...this.state,
                         name: budget.name,
-                        selectedAccounts: budget.accountIds.map(a => accounts.find(m => {return m.accountId===a})),
+                        selectedAccounts: budget.accountIds.map(a => accounts.find(m => { return m.accountId === a })),
                         isActive: budget.isActive,
                         repeat: budget.repeat,
                         startDate: moment(budget.startDate).format('YYYY-MM-DD'),
-                        endDate: moment(budget.endDate).format('YYYY-MM-DD'),
-                        amount: budget.amount,
-                        selectedCategories: budget.categoryIds.map(a => categories.find(m => {return m.categoryId===a})),
+                        endDate: budget.endDate === null ? '' : moment(budget.endDate).format('YYYY-MM-DD'),
+                        amount: formatMoney(budget.amount),
+                        selectedCategories: budget.categoryIds.map(a => categories.find(m => { return m.categoryId === a })),
                         noEndDate: budget.noEndDate,
                         ledger: budget.ledger
                     });
@@ -87,6 +88,7 @@ class EditBudget extends Component {
 
     handleSave = () => {
         var data = {
+            budgetId: this.state.budgetId,
             name: this.state.name,
             accountIds: this.state.selectedAccounts.map(m => m.accountId),
             categoryIds: this.state.selectedCategories.map(m => m.categoryId),
@@ -96,7 +98,7 @@ class EditBudget extends Component {
             noEndDate: this.state.noEndDate,
             endDate: this.state.endDate,
             isActive: true,
-            ledger: []
+            ledger: this.state.ledger
         };
         let hasError = false;
         let errors = {
@@ -184,6 +186,16 @@ class EditBudget extends Component {
         this.setState({ ...this.state, "amount": value });
     }
 
+    handleDelete = () => {
+        remove("budget", this.state.budgetId).then(() => {
+            this.props.history.push("/budget");
+        });
+    }
+
+    toggleDeleteModal = () => {
+        this.setState({ ...this.state, showDelete: !this.state.showDelete });
+    }
+
     render() {
         return (
             <>
@@ -192,8 +204,8 @@ class EditBudget extends Component {
                     showBackButton={true}
                     title="Add budget"
                     buttons={[
-                        (<IconButton onClick={() => {alert(1)}}  color="inherit"><Delete /></IconButton>),
-                        (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
+                        (<IconButton onClick={this.toggleDeleteModal.bind(this)} color="inherit"><Delete /></IconButton>),
+                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
                     ]}
                 />
                 <div className="content">
@@ -296,6 +308,19 @@ class EditBudget extends Component {
                         label="no end date"
                     />
                 </div>
+
+                <Dialog
+                    onClose={this.toggleDeleteModal}
+                    open={this.state.showDelete}>
+                    <DialogTitle>Confirm</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Are you sure you want to delete?</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.toggleDeleteModal} color="primary" autoFocus>Cancel</Button>
+                        <Button onClick={this.handleDelete} color="secondary">Delete</Button>
+                    </DialogActions>
+                </Dialog>
             </>
         )
     }

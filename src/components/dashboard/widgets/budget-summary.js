@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import { formatMoney } from "../../../helpers";
-import { Typography, Card, CardActions, CardContent, Button, LinearProgress } from "@material-ui/core";
+import { Typography, Card, CardContent, LinearProgress } from "@material-ui/core";
+import { getExpensesOfBudgetLedger } from "../../../modules/budget-module";
 
 const styles = {
     card: {
@@ -52,7 +53,22 @@ const styles = {
     }
 }
 
+
 class BudgetSummary extends Component {
+    state = {
+        spent: 0
+    };
+    componentDidMount () {
+        getExpensesOfBudgetLedger(this.props.budget.ledger[0], this.props.budget.accountIds, this.props.budget.categoryIds).then((expenses) => {
+            if (expenses.length > 0) {
+                let spent = 0;
+                for (var i =0; i<expenses.length; i++) {
+                    spent += expenses[i].amount;
+                }
+                this.setState({...this.state, spent});
+            }
+        });
+    }
 
     progressBarClassName = (percent) => {
         let result = {
@@ -77,23 +93,14 @@ class BudgetSummary extends Component {
                     <Typography className={this.props.classes.title} variant="title" color="textPrimary" gutterBottom>{this.props.budget.name}</Typography>
                     <Typography variant="overline" className={this.props.classes.textCenter}>Total: {formatMoney(this.props.budget.amount)}</Typography>
                     <LinearProgress
-                        variant="determinate" value={(this.props.budget.spent / this.props.budget.amount) * 100}
-                        classes={this.progressBarClassName((this.props.budget.spent / this.props.budget.amount) * 100)}
+                        variant="determinate" value={(this.state.spent / this.props.budget.amount) * 100}
+                        classes={this.progressBarClassName((this.state.spent / this.props.budget.amount) * 100)}
                     />
                     <div>
-                        <Typography variant="caption" className={this.props.classes.lineHeight}>Spent<br />{formatMoney(this.props.budget.spent)}</Typography>
-                        <Typography variant="caption" className={`${this.props.classes.lineHeight} ${this.props.classes.floatRight}`}>Remaining<br />{formatMoney(this.props.budget.amount - this.props.budget.spent)}</Typography>
+                        <Typography variant="caption" className={this.props.classes.lineHeight}>Spent<br />{formatMoney(this.state.spent)}</Typography>
+                        <Typography variant="caption" className={`${this.props.classes.lineHeight} ${this.props.classes.floatRight}`}>Remaining<br />{formatMoney(this.props.budget.amount - this.state.spent)}</Typography>
                     </div>
-
-
-
-                    {/* <Typography variant="h5" component="h2">asdasd</Typography>
-                    <Typography className={this.props.classes.pos} color="textSecondary">adjective</Typography>
-                    <Typography component="p">well meaning and kindly.<br />{'"a benevolent smile"'}</Typography> */}
                 </CardContent>
-                {/* <CardActions>
-                    <Button size="small">Learn More</Button>
-                </CardActions> */}
             </Card>
         )
     }

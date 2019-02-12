@@ -37,7 +37,7 @@ class EditExpense extends Component {
         }
     }
 
-    componentDidMount () {
+    componentDidMount() {
         selectAll("account").then((accounts) => {
             this.setState({ ...this.state, accounts });
         });
@@ -52,12 +52,12 @@ class EditExpense extends Component {
         requestDatabase.onsuccess = (event) => {
             var db = event.target.result;
             var transaction = db.transaction(["expense"], "readonly");
-    
+
             var store = transaction.objectStore("expense");
             var select = store.get(id);
 
             transaction.oncomplete = (event) => {
-                if (!select.result){
+                if (!select.result) {
                     this.props.history.push("/expense");
                     return;
                 }
@@ -74,21 +74,21 @@ class EditExpense extends Component {
         }
     }
 
-    handleChangeProperty (property, e) {
+    handleChangeProperty(property, e) {
         let value = e.target.value;
         if (property === 'accountId' || property === 'categoryId') {
             value = parseInt(e.target.value);
         }
 
-        this.setState({...this.state, [property]: value});
+        this.setState({ ...this.state, [property]: value });
     }
 
-    formatCurrency (e) {
+    formatCurrency(e) {
         let value = formatMoney(this.state.amount);
-        this.setState({...this.state, "amount": value});
+        this.setState({ ...this.state, "amount": value });
     }
 
-    handleSave () {
+    handleSave() {
         var self = this;
         var data = {
             expenseId: this.state.expenseId,
@@ -99,7 +99,7 @@ class EditExpense extends Component {
             description: this.state.description,
             date: new Date(this.state.date)
         };
-        
+
         let hasError = false;
         let errors = {
             title: false,
@@ -129,8 +129,8 @@ class EditExpense extends Component {
             hasError = true;
         }
 
-        if(hasError) {
-            this.setState({...this.state, errors});
+        if (hasError) {
+            this.setState({ ...this.state, errors });
         }
         else {
             update("expense", data, (success) => {
@@ -161,99 +161,94 @@ class EditExpense extends Component {
     }
 
     toggleDeleteModal = () => {
-        this.setState({...this.state, showDelete: !this.state.showDelete});
+        this.setState({ ...this.state, showDelete: !this.state.showDelete });
     }
 
     render() {
-      return (
-        <>
-            <MyToolbar 
-                onBack={() => {this.props.history.goBack()}}
-                showBackButton={true}
-                title="Add expense"
-                buttons={[
-                    (<IconButton onClick={this.toggleDeleteModal.bind(this)}  color="inherit"><Delete /></IconButton>),
-                    (<IconButton onClick={this.handleSave.bind(this)}  color="inherit"><Save /></IconButton>)
-                ]}
-            />
-            <div className="content">
-                <FormControl className="form-control" margin="normal">
-                    <InputLabel>Account</InputLabel>
-                    <Select
-                        error={this.state.errors.account}
-                        value={this.state.accountId}
-                        onChange={this.handleChangeProperty.bind(this, 'accountId')}>
+        return (
+            <>
+                <MyToolbar
+                    onBack={() => { this.props.history.goBack() }}
+                    showBackButton={true}
+                    title="Add expense"
+                    buttons={[
+                        (<IconButton onClick={this.toggleDeleteModal.bind(this)} color="inherit"><Delete /></IconButton>),
+                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
+                    ]}
+                />
+                <div className="content">
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Account</InputLabel>
+                        <Select
+                            error={this.state.errors.account}
+                            value={this.state.accountId}
+                            onChange={this.handleChangeProperty.bind(this, 'accountId')}>
                             <MenuItem value={0}><em>select account</em></MenuItem>
                             {this.state.accounts.map(item => <MenuItem key={item.accountId} value={item.accountId}>{item.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
-                <TextField
-                    error={this.state.errors.title}
-                    label="Title"
-                    value={this.state.title}
-                    onChange={this.handleChangeProperty.bind(this, 'title')}
-                    margin="normal"
-                    className="form-control"
-                />
-                <TextField
-                    error={this.state.errors.amount}
-                    label="Amount"
-                    value={this.state.amount}
-                    onChange={this.handleChangeProperty.bind(this, 'amount')}
-                    margin="normal"
-                    className="form-control"
-                    onBlur={this.formatCurrency.bind(this)}
-                />
-                <FormControl className="form-control" margin="normal">
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                        error={this.state.errors.category}
-                        value={this.state.categoryId}
-                        onChange={this.handleChangeProperty.bind(this, 'categoryId')}>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        error={this.state.errors.title}
+                        label="Title"
+                        value={this.state.title}
+                        onChange={this.handleChangeProperty.bind(this, 'title')}
+                        margin="normal"
+                        className="form-control"
+                    />
+                    <TextField
+                        error={this.state.errors.amount}
+                        label="Amount"
+                        value={this.state.amount}
+                        onChange={this.handleChangeProperty.bind(this, 'amount')}
+                        margin="normal"
+                        className="form-control"
+                        onBlur={this.formatCurrency.bind(this)}
+                    />
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            error={this.state.errors.category}
+                            value={this.state.categoryId}
+                            onChange={this.handleChangeProperty.bind(this, 'categoryId')}>
                             <MenuItem value={0}><em>select category</em></MenuItem>
                             {this.state.categories.map(item => <MenuItem key={item.categoryId} value={item.categoryId}>{item.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
-                <TextField
-                    error={this.state.errors.date}
-                    label="Date"
-                    type="datetime-local"
-                    margin="normal"
-                    className="form-control"
-                    value={this.state.date} 
-                    onChange={this.handleChangeProperty.bind(this, 'date')}
-                />
-                <TextField
-                    className="form-control"
-                    label="Notes"
-                    multiline
-                    rows="6"
-                    value={this.state.description} 
-                    onChange={this.handleChangeProperty.bind(this, 'description')}
-                    margin="normal"
-                />
-                
-                <Dialog
-                    onClose={this.toggleDeleteModal}
-                    open={this.state.showDelete}>
-                <DialogTitle>Confirm</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Are you sure you want to delete?</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.toggleDeleteModal} color="primary" autoFocus>
-                    Cancel
-                    </Button>
-                    <Button onClick={this.handleDelete} color="secondary">
-                    Delete
-                    </Button>
-                </DialogActions>
-                </Dialog>
-            </div>
-        </>
-      );
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        error={this.state.errors.date}
+                        label="Date"
+                        type="datetime-local"
+                        margin="normal"
+                        className="form-control"
+                        value={this.state.date}
+                        onChange={this.handleChangeProperty.bind(this, 'date')}
+                    />
+                    <TextField
+                        className="form-control"
+                        label="Notes"
+                        multiline
+                        rows="6"
+                        value={this.state.description}
+                        onChange={this.handleChangeProperty.bind(this, 'description')}
+                        margin="normal"
+                    />
+
+                    <Dialog
+                        onClose={this.toggleDeleteModal}
+                        open={this.state.showDelete}>
+                        <DialogTitle>Confirm</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>Are you sure you want to delete?</DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.toggleDeleteModal} color="primary" autoFocus>Cancel</Button>
+                            <Button onClick={this.handleDelete} color="secondary">Delete</Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
+            </>
+        );
     }
-  }
-  
-  export default EditExpense;
-  
+}
+
+export default EditExpense;

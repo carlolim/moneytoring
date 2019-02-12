@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import { Typography, Fab, Select, MenuItem, Divider } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { selectAll, select } from "../../helpers";
+import { selectAll } from "../../helpers";
 import { budgetRepeatEnum } from "../../helpers";
 import { getBudgetRepeatTypeForMoment } from "../../modules/budget-module";
 import BudgetSummary from "../dashboard/widgets/budget-summary";
@@ -70,6 +71,7 @@ class Budget extends Component {
                     }
                 }
                 else {
+                    budget.ledger[0].endDate = budget.noEndDate ? new Date() : budget.ledger[0].endDate;
                     nonRepeating.push(budget);
                 }
             }
@@ -90,7 +92,7 @@ class Budget extends Component {
                 (budget.noEndDate || moment(budget.endDate).endOf(type).toDate() >= moment().endOf(type))) {
                 let ledger = budget.ledger.find(m => m.startDate.toString() === moment().startOf(type).toDate().toString() && m.endDate.toString() === moment().endOf(type).toDate().toString());
                 if (ledger === undefined || ledger === null) {
-                    ledger = { startDate: moment().startOf(type), endDate: moment().endOf(type), spent: 0, amount: budget.amount };
+                    ledger = { startDate: moment().startOf(type).toDate(), endDate: moment().endOf(type).toDate(), spent: 0, amount: budget.amount };
                 }
                 return ledger;
             }
@@ -135,7 +137,9 @@ class Budget extends Component {
                 {this.state.display === 'all' ?
                     this.state.nonRepeating.items.map((item, i) =>
                         <div key={i} className="content">
-                            <BudgetSummary budget={{ name: item.name, spent: item.ledger[0].spent, amount: item.ledger[0].amount }} />
+                            <Link style={{ textDecoration: 'none' }} to={`/budget/edit/${item.budgetId}`}>
+                                <BudgetSummary budget={item} />
+                            </Link>
                         </div>
                     ) : null}
 
@@ -167,7 +171,9 @@ const RenderItems = (props) => (
                 <Typography variant="button" align="center">{props.label}</Typography>
                 {props.items.map((item, i) =>
                     <div key={i} className="content">
-                        <BudgetSummary budget={{ name: item.name, spent: item.ledger[0].spent, amount: item.ledger[0].amount }} />
+                        <Link style={{ textDecoration: 'none' }} to={`/budget/edit/${item.budgetId}`}>
+                            <BudgetSummary budget={item} />
+                        </Link>
                     </div>
                 )}
             </>

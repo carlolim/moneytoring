@@ -1,5 +1,3 @@
-import moment from "moment";
-
 
 export const formatMoney = (n, c, d, t) => {
   var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -91,6 +89,23 @@ export const update = (table, data, done) => {
       done(false);
     }
   }
+}
+
+export const remove = (table, id) => {
+  return new Promise((resolve, reject) => {
+    let db = indexedDB.open("Moneytoring");
+    db.onsuccess = (event) => {
+      let tx = event.target.result.transaction([table], "readwrite");
+      let store = tx.objectStore(table);
+      store.delete(id);
+      tx.oncomplete = (event) => {
+        resolve(true);
+      }
+      tx.onerror = (event) => {
+        reject(false);
+      }
+    }
+  });
 }
 
 export const budgetRepeatEnum = {
