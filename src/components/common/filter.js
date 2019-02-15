@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import moment from "moment";
-import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
+import {
+    withStyles, Button, DialogActions,
+    DialogContent, DialogTitle, FormControl,
+    InputLabel, Select, MenuItem, TextField,
+    Input, Checkbox, ListItemText
+} from "@material-ui/core";
+import PropTypes from 'prop-types';
+import { selectAll } from '../../helpers';
 
+const styles = {
+    menuProps: {
+        PaperProps: {
+            style: {
+                maxHeight: 48 * 4.5 + 8,
+                width: 250,
+            },
+        },
+    }
+}
 class Filter extends Component {
     constructor(props) {
         super(props);
@@ -29,8 +38,12 @@ class Filter extends Component {
             },
             custom: {
                 from: '',
-                to:''
+                to: ''
             },
+            accounts: [],
+            selectedAccounts: [],
+            categories: [],
+            selectedCategories: [],
             errors: {
                 daily: false,
                 weekly: false,
@@ -42,12 +55,31 @@ class Filter extends Component {
         }
     }
 
+    async componentDidMount() {
+        let accounts = await selectAll("account");
+        let categories = await selectAll("category");
+        accounts.unshift({ accountId: 0, name: "All" })
+        categories.unshift({ categoryId: 0, name: "All" })
+        this.setState({ ...this.state, accounts, categories });
+
+        let currentFilter = localStorage.getItem("expensefilter");
+        if (currentFilter !== null && currentFilter !== undefined) {
+            currentFilter = JSON.parse(currentFilter);
+            if (currentFilter.selectedAccounts !== undefined && currentFilter.selectedCategories !== undefined) {
+                this.setState({ ...this.state, selectedAccounts: currentFilter.selectedAccounts, selectedCategories: currentFilter.selectedCategories });
+            }
+        }
+        else {
+            currentFilter = {};
+        }
+    }
+
     changeViewType = (e) => {
-        this.setState({...this.state, viewType: e.target.value });
+        this.setState({ ...this.state, viewType: e.target.value });
     }
 
     changeStateValue = (parentProperty, childProperty, e) => {
-        this.setState({...this.state, [parentProperty]: { ...this.state[parentProperty], [childProperty]: e.target.value }});
+        this.setState({ ...this.state, [parentProperty]: { ...this.state[parentProperty], [childProperty]: e.target.value } });
     }
 
     handleApply = () => {
@@ -62,9 +94,9 @@ class Filter extends Component {
             to: false
         };
         let hasError = false;
-        switch(this.state.viewType) {
+        switch (this.state.viewType) {
             case 'daily':
-                if(this.state.daily.date === '') {
+                if (this.state.daily.date === '') {
                     hasError = true;
                     errors.daily = true;
                 }
@@ -107,12 +139,12 @@ class Filter extends Component {
                     endDate = moment().year(year).endOf('year');
                 }
                 break;
-           default: //custom range
-                if(this.state.custom.from === ''){
+            default: //custom range
+                if (this.state.custom.from === '') {
                     hasError = true;
                     errors.from = true;
                 }
-                else if(this.state.custom.to === '') {
+                else if (this.state.custom.to === '') {
                     hasError = true;
                     errors.to = true;
                 }
@@ -121,12 +153,29 @@ class Filter extends Component {
                     endDate = moment(this.state.custom.to).hours(23).minutes(59).seconds(59);
                 }
         }
-        if(hasError) {
-            this.setState({...this.state, errors });
+        if (hasError) {
+            this.setState({ ...this.state, errors });
         }
         else {
-            this.props.applyFilter(startDate, endDate, this.state.viewType);
+            this.props.applyFilter(startDate, endDate, this.state.viewType, this.state.selectedAccounts, this.state.selectedCategories);
         }
+    }
+
+    handleChangeProperty(property, e) {
+        let value = e.target.value;
+        if (property === "selectedAccounts") {
+            let all = value.find(m => m.accountId === 0);
+            if (all !== null && all !== undefined) {
+                value = this.state.accounts;
+            }
+        }
+        else if (property === "selectedCategories") {
+            let all = value.find(m => m.categoryId === 0);
+            if (all !== null && all !== undefined) {
+                value = this.state.categories;
+            }
+        }
+        this.setState({ ...this.state, [property]: value });
     }
 
     render() {
@@ -134,15 +183,52 @@ class Filter extends Component {
             <>
                 <DialogTitle>Filter expense</DialogTitle>
                 <DialogContent>
+
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Accounts</InputLabel>
+                        <Select
+                            multiple
+                            value={this.state.selectedAccounts}
+                            onChange={this.handleChangeProperty.bind(this, 'selectedAccounts')}
+                            input={<Input id="select-multiple-checkbox" />}
+                            renderValue={(selected) => selected.map(i => { return i.name }).join(",")}
+                            MenuProps={styles.menuProps}>
+                            {this.state.accounts.map((account, index) => (
+                                <MenuItem key={index} value={account}>
+                                    <Checkbox checked={this.state.selectedAccounts.map(f => { return f.accountId }).indexOf(account.accountId) > -1} />
+                                    <ListItemText primary={account.name} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl className="form-control" margin="normal">
+                        <InputLabel>Categories</InputLabel>
+                        <Select
+                            multiple
+                            value={this.state.selectedCategories}
+                            onChange={this.handleChangeProperty.bind(this, 'selectedCategories')}
+                            input={<Input id="select-multiple-checkbox" />}
+                            renderValue={(selected) => selected.map(i => { return i.name }).join(",")}
+                            MenuProps={styles.menuProps}>
+                            {this.state.categories.map((category, index) => (
+                                <MenuItem key={index} value={category}>
+                                    <Checkbox checked={this.state.selectedCategories.map(f => { return f.categoryId }).indexOf(category.categoryId) > -1} />
+                                    <ListItemText primary={category.name} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
                     <FormControl className="form-control" margin="normal">
                         <InputLabel>View</InputLabel>
                         <Select
                             value={this.state.viewType} onChange={this.changeViewType.bind(this)}>
-                                <MenuItem value="daily"><em>Daily</em></MenuItem>
-                                <MenuItem value="weekly"><em>Weekly</em></MenuItem>
-                                <MenuItem value="monthly"><em>Monthly</em></MenuItem>
-                                <MenuItem value="yearly"><em>Yearly</em></MenuItem>
-                                <MenuItem value="custom"><em>Custom</em></MenuItem>
+                            <MenuItem value="daily"><em>Daily</em></MenuItem>
+                            <MenuItem value="weekly"><em>Weekly</em></MenuItem>
+                            <MenuItem value="monthly"><em>Monthly</em></MenuItem>
+                            <MenuItem value="yearly"><em>Yearly</em></MenuItem>
+                            <MenuItem value="custom"><em>Custom</em></MenuItem>
                         </Select>
                     </FormControl>
 
@@ -151,56 +237,56 @@ class Filter extends Component {
                             error={this.state.errors.daily}
                             ref="title"
                             label="Date"
-                            value={this.state.daily.date} 
+                            value={this.state.daily.date}
                             onChange={this.changeStateValue.bind(this, 'daily', 'date')}
                             margin="normal"
                             type="date"
                             className="form-control"
                         />
-                    : null }
+                        : null}
                     {this.state.viewType === 'weekly' ?
                         <TextField
                             error={this.state.errors.weekly}
                             ref="title"
                             label="Week"
-                            value={this.state.weekly.week} 
+                            value={this.state.weekly.week}
                             onChange={this.changeStateValue.bind(this, 'weekly', 'week')}
                             margin="normal"
                             type="week"
                             className="form-control"
                         />
-                    : null }
+                        : null}
                     {this.state.viewType === 'monthly' ?
                         <TextField
                             error={this.state.errors.monthly}
                             ref="title"
                             label="Month"
-                            value={this.state.monthly.month} 
+                            value={this.state.monthly.month}
                             onChange={this.changeStateValue.bind(this, 'monthly', 'month')}
                             margin="normal"
                             type="month"
                             className="form-control"
                         />
-                    : null }
+                        : null}
                     {this.state.viewType === 'yearly' ?
                         <TextField
                             error={this.state.errors.yearly}
                             ref="title"
                             label="Year"
-                            value={this.state.yearly.year} 
+                            value={this.state.yearly.year}
                             onChange={this.changeStateValue.bind(this, 'yearly', 'year')}
                             margin="normal"
                             className="form-control"
                             type="number"
                         />
-                    : null }
+                        : null}
                     {this.state.viewType === 'custom' ?
                         <>
                             <TextField
                                 error={this.state.errors.from}
                                 ref="title"
                                 label="From"
-                                value={this.state.custom.from} 
+                                value={this.state.custom.from}
                                 onChange={this.changeStateValue.bind(this, 'custom', 'from')}
                                 margin="normal"
                                 type="date"
@@ -210,14 +296,14 @@ class Filter extends Component {
                                 error={this.state.errors.to}
                                 ref="title"
                                 label="To"
-                                value={this.state.custom.to} 
+                                value={this.state.custom.to}
                                 onChange={this.changeStateValue.bind(this, 'custom', 'to')}
                                 margin="normal"
                                 type="date"
                                 className="form-control"
                             />
                         </>
-                    : null }
+                        : null}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.props.close} color="secondary">Cancel</Button>
@@ -227,6 +313,9 @@ class Filter extends Component {
         );
     }
 }
-  
-  export default Filter;
-  
+
+Filter.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(Filter);
