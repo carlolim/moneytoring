@@ -49,10 +49,13 @@ class Expense extends Component {
       filter = {
         viewType: 'daily',
         from: moment().hours(0).minutes(0).seconds(0),
-        to: moment().hours(23).minutes(59).seconds(59),
-        selectedAccounts: {accountId: 0, name: "All"},
-        selectedCategories: {categoryId: 0, name: "All"},
+        to: moment().hours(23).minutes(59).seconds(59)
       }
+    }
+
+    if (filter.selectedAccounts === undefined) {
+      filter.selectedAccounts= [{accountId: 0, name: "All"}];
+      filter.selectedCategories= [{categoryId: 0, name: "All"}];
     }
     this.state = {
       currentFilter: '',

@@ -50,7 +50,9 @@ class Filter extends Component {
                 monthly: false,
                 yearly: false,
                 from: false,
-                to: false
+                to: false,
+                selectedAccounts: false,
+                selectedCategories: false
             }
         }
     }
@@ -91,7 +93,9 @@ class Filter extends Component {
             monthly: false,
             yearly: false,
             from: false,
-            to: false
+            to: false,
+            selectedAccounts: false,
+            selectedCategories: false
         };
         let hasError = false;
         switch (this.state.viewType) {
@@ -153,6 +157,16 @@ class Filter extends Component {
                     endDate = moment(this.state.custom.to).hours(23).minutes(59).seconds(59);
                 }
         }
+        
+        if (this.state.selectedAccounts.length === 0){
+            errors.selectedAccounts = true;
+            hasError = true;
+        }
+        if (this.state.selectedCategories.length === 0) {
+            errors.selectedCategories = true;
+            hasError = true;
+        }
+
         if (hasError) {
             this.setState({ ...this.state, errors });
         }
@@ -187,10 +201,11 @@ class Filter extends Component {
                     <FormControl className="form-control" margin="normal">
                         <InputLabel>Accounts</InputLabel>
                         <Select
+                            error={this.state.errors.selectedAccounts}
                             multiple
                             value={this.state.selectedAccounts}
                             onChange={this.handleChangeProperty.bind(this, 'selectedAccounts')}
-                            input={<Input id="select-multiple-checkbox" />}
+                            input={<Input id="select-multiple-checkbox1" />}
                             renderValue={(selected) => selected.map(i => { return i.name }).join(",")}
                             MenuProps={styles.menuProps}>
                             {this.state.accounts.map((account, index) => (
@@ -205,10 +220,11 @@ class Filter extends Component {
                     <FormControl className="form-control" margin="normal">
                         <InputLabel>Categories</InputLabel>
                         <Select
+                            error={this.state.errors.selectedCategories}
                             multiple
                             value={this.state.selectedCategories}
                             onChange={this.handleChangeProperty.bind(this, 'selectedCategories')}
-                            input={<Input id="select-multiple-checkbox" />}
+                            input={<Input id="select-multiple-checkbox2" />}
                             renderValue={(selected) => selected.map(i => { return i.name }).join(",")}
                             MenuProps={styles.menuProps}>
                             {this.state.categories.map((category, index) => (
