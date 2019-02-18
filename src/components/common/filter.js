@@ -71,9 +71,6 @@ class Filter extends Component {
                 this.setState({ ...this.state, selectedAccounts: currentFilter.selectedAccounts, selectedCategories: currentFilter.selectedCategories });
             }
         }
-        else {
-            currentFilter = {};
-        }
     }
 
     changeViewType = (e) => {
