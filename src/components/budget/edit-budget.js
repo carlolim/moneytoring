@@ -165,13 +165,21 @@ class EditBudget extends Component {
         let value = e.target.value;
         if (property === "selectedAccounts") {
             let all = value.find(m => m.accountId === 0);
-            if (all !== null && all !== undefined) {
+            let allFromState = this.state.selectedAccounts.find(m => m.accountId === 0);
+            if (all !== null && all !== undefined && allFromState !== null && allFromState !== undefined) {
+                value.shift();
+            }
+            else if (all !== null && all !== undefined) {
                 value = this.state.accounts;
             }
         }
         else if (property === "selectedCategories") {
             let all = value.find(m => m.categoryId === 0);
-            if (all !== null && all !== undefined) {
+            let allFromState = this.state.selectedCategories.find(m => m.categoryId === 0);
+            if (all !== null && all !== undefined && allFromState !== null && allFromState !== undefined) {
+                value.shift();
+            }
+            else if (all !== null && all !== undefined) {
                 value = this.state.categories;
             }
         }

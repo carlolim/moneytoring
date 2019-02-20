@@ -200,7 +200,6 @@ class Filter extends Component {
             else if (all !== null && all !== undefined) {
                 value = this.state.accounts;
             }
-
         }
         else if (property === "selectedCategories") {
             let all = value.find(m => m.categoryId === 0);
