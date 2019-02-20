@@ -68,7 +68,23 @@ class Filter extends Component {
         if (currentFilter !== null && currentFilter !== undefined) {
             currentFilter = JSON.parse(currentFilter);
             if (currentFilter.selectedAccounts !== undefined && currentFilter.selectedCategories !== undefined) {
-                this.setState({ ...this.state, selectedAccounts: currentFilter.selectedAccounts, selectedCategories: currentFilter.selectedCategories });
+                if (currentFilter.selectedAccounts[0].accountId === 0) {
+                    this.setState({...this.state, selectedAccounts: accounts});
+                }
+                else {
+                    this.setState({ ...this.state, 
+                        selectedAccounts: currentFilter.selectedAccounts.map(a => accounts.find(m => { return m.accountId === a.accountId }))
+                    });
+                }
+
+                if (currentFilter.selectedCategories[0].categoryId === 0) {
+                    this.setState({...this.state, selectedCategories: categories});
+                }
+                else {
+                    this.setState({ ...this.state, 
+                        selectedCategories: currentFilter.selectedCategories.map(c => categories.find(m => { return m.categoryId === c.categoryId }))
+                    });
+                }
             }
         }
     }
@@ -174,15 +190,25 @@ class Filter extends Component {
 
     handleChangeProperty(property, e) {
         let value = e.target.value;
+        
         if (property === "selectedAccounts") {
             let all = value.find(m => m.accountId === 0);
-            if (all !== null && all !== undefined) {
+            let allFromState = this.state.selectedAccounts.find(m => m.accountId === 0);
+            if (all !== null && all !== undefined && allFromState !== null && allFromState !== undefined) {
+                value.shift();
+            }
+            else if (all !== null && all !== undefined) {
                 value = this.state.accounts;
             }
+
         }
         else if (property === "selectedCategories") {
             let all = value.find(m => m.categoryId === 0);
-            if (all !== null && all !== undefined) {
+            let allFromState = this.state.selectedCategories.find(m => m.categoryId === 0);
+            if (all !== null && all !== undefined && allFromState !== null && allFromState !== undefined) {
+                value.shift();
+            }
+            else if (all !== null && all !== undefined) {
                 value = this.state.categories;
             }
         }
