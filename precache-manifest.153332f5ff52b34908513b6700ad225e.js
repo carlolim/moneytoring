@@ -1,15 +1,15 @@
 self.__precacheManifest = [
   {
-    "revision": "d8bcbe724fd6f4ba44d0ee6a2675890f",
-    "url": "/moneytoring/static/media/roboto-latin-400italic.d8bcbe72.woff2"
+    "revision": "210a7c781f5a354a0e4985656ab456d9",
+    "url": "/moneytoring/static/media/roboto-latin-300italic.210a7c78.woff"
   },
   {
-    "revision": "2d94a13a856ffd7bc940",
+    "revision": "60f506c4797382516027",
     "url": "/moneytoring/static/css/main.0e1af37a.chunk.css"
   },
   {
-    "revision": "8c2ade503b34e31430d6c98aa29a52a3",
-    "url": "/moneytoring/static/media/roboto-latin-900.8c2ade50.woff"
+    "revision": "bc833e725c137257c2c42a789845d82f",
+    "url": "/moneytoring/static/media/roboto-latin-900italic.bc833e72.woff"
   },
   {
     "revision": "e062656a9b9b177cd375",
@@ -28,12 +28,12 @@ self.__precacheManifest = [
     "url": "/moneytoring/static/media/roboto-latin-300.55536c8e.woff2"
   },
   {
-    "revision": "5d4aeb4e5f5ef754e307d7ffaef688bd",
-    "url": "/moneytoring/static/media/roboto-latin-400.5d4aeb4e.woff2"
-  },
-  {
     "revision": "285467176f7fe6bb6a9c6873b3dad2cc",
     "url": "/moneytoring/static/media/roboto-latin-500.28546717.woff2"
+  },
+  {
+    "revision": "5d4aeb4e5f5ef754e307d7ffaef688bd",
+    "url": "/moneytoring/static/media/roboto-latin-400.5d4aeb4e.woff2"
   },
   {
     "revision": "037d830416495def72b7881024c14b7b",
@@ -52,40 +52,40 @@ self.__precacheManifest = [
     "url": "/moneytoring/static/media/roboto-latin-100italic.d704bb3d.woff"
   },
   {
-    "revision": "e9dbbe8a693dd275c16d32feb101f1c1",
-    "url": "/moneytoring/static/media/roboto-latin-100.e9dbbe8a.woff"
-  },
-  {
     "revision": "a1471d1d6431c893582a5f6a250db3f9",
     "url": "/moneytoring/static/media/roboto-latin-300.a1471d1d.woff"
   },
   {
-    "revision": "2d94a13a856ffd7bc940",
-    "url": "/moneytoring/static/js/main.2d94a13a.chunk.js"
+    "revision": "e9dbbe8a693dd275c16d32feb101f1c1",
+    "url": "/moneytoring/static/media/roboto-latin-100.e9dbbe8a.woff"
   },
   {
-    "revision": "d69924b98acd849cdeba9fbff3f88ea6",
-    "url": "/moneytoring/static/media/roboto-latin-300italic.d69924b9.woff2"
+    "revision": "60f506c4797382516027",
+    "url": "/moneytoring/static/js/main.60f506c4.chunk.js"
   },
   {
-    "revision": "210a7c781f5a354a0e4985656ab456d9",
-    "url": "/moneytoring/static/media/roboto-latin-300italic.210a7c78.woff"
+    "revision": "d8bcbe724fd6f4ba44d0ee6a2675890f",
+    "url": "/moneytoring/static/media/roboto-latin-400italic.d8bcbe72.woff2"
   },
   {
     "revision": "bafb105baeb22d965c70fe52ba6b49d9",
     "url": "/moneytoring/static/media/roboto-latin-400.bafb105b.woff"
   },
   {
-    "revision": "de8b7431b74642e830af4d4f4b513ec9",
-    "url": "/moneytoring/static/media/roboto-latin-500.de8b7431.woff"
+    "revision": "d69924b98acd849cdeba9fbff3f88ea6",
+    "url": "/moneytoring/static/media/roboto-latin-300italic.d69924b9.woff2"
+  },
+  {
+    "revision": "9680d5a0c32d2fd084e07bbc4c8b2923",
+    "url": "/moneytoring/static/media/roboto-latin-400italic.9680d5a0.woff"
   },
   {
     "revision": "510dec37fa69fba39593e01a469ee018",
     "url": "/moneytoring/static/media/roboto-latin-500italic.510dec37.woff2"
   },
   {
-    "revision": "9680d5a0c32d2fd084e07bbc4c8b2923",
-    "url": "/moneytoring/static/media/roboto-latin-400italic.9680d5a0.woff"
+    "revision": "de8b7431b74642e830af4d4f4b513ec9",
+    "url": "/moneytoring/static/media/roboto-latin-500.de8b7431.woff"
   },
   {
     "revision": "010c1aeee3c6d1cbb1d5761d80353823",
@@ -96,27 +96,27 @@ self.__precacheManifest = [
     "url": "/moneytoring/static/media/roboto-latin-700.cf6613d1.woff"
   },
   {
-    "revision": "846d1890aee87fde5d8ced8eba360c3a",
-    "url": "/moneytoring/static/media/roboto-latin-700italic.846d1890.woff"
-  },
-  {
     "revision": "ffcc050b2d92d4b14a4fcb527ee0bcc8",
     "url": "/moneytoring/static/media/roboto-latin-500italic.ffcc050b.woff"
-  },
-  {
-    "revision": "bc833e725c137257c2c42a789845d82f",
-    "url": "/moneytoring/static/media/roboto-latin-900italic.bc833e72.woff"
   },
   {
     "revision": "7b770d6c53423deb1a8e49d3c9175184",
     "url": "/moneytoring/static/media/roboto-latin-900italic.7b770d6c.woff2"
   },
   {
+    "revision": "846d1890aee87fde5d8ced8eba360c3a",
+    "url": "/moneytoring/static/media/roboto-latin-700italic.846d1890.woff"
+  },
+  {
+    "revision": "8c2ade503b34e31430d6c98aa29a52a3",
+    "url": "/moneytoring/static/media/roboto-latin-900.8c2ade50.woff"
+  },
+  {
     "revision": "e062656a9b9b177cd375",
     "url": "/moneytoring/static/css/1.8f3d8806.chunk.css"
   },
   {
-    "revision": "78969cd488f65d89899eb834c478108c",
+    "revision": "c095aefb092116305cc0febd1da54504",
     "url": "/moneytoring/index.html"
   }
 ];
