@@ -1,16 +1,16 @@
 {
   "main.css": "/moneytoring/static/css/main.0e1af37a.chunk.css",
-  "main.js": "/moneytoring/static/js/main.e86cd1a8.chunk.js",
-  "main.js.map": "/moneytoring/static/js/main.e86cd1a8.chunk.js.map",
+  "main.js": "/moneytoring/static/js/main.10ef8622.chunk.js",
+  "main.js.map": "/moneytoring/static/js/main.10ef8622.chunk.js.map",
   "static/css/1.8f3d8806.chunk.css": "/moneytoring/static/css/1.8f3d8806.chunk.css",
   "static/js/1.e062656a.chunk.js": "/moneytoring/static/js/1.e062656a.chunk.js",
   "static/js/1.e062656a.chunk.js.map": "/moneytoring/static/js/1.e062656a.chunk.js.map",
   "runtime~main.js": "/moneytoring/static/js/runtime~main.9062f253.js",
   "runtime~main.js.map": "/moneytoring/static/js/runtime~main.9062f253.js.map",
   "static/media/index.css": "/moneytoring/static/media/roboto-latin-900italic.bc833e72.woff",
-  "static/css/1.8f3d8806.chunk.css.map": "/moneytoring/static/css/1.8f3d8806.chunk.css.map",
   "static/css/main.0e1af37a.chunk.css.map": "/moneytoring/static/css/main.0e1af37a.chunk.css.map",
+  "static/css/1.8f3d8806.chunk.css.map": "/moneytoring/static/css/1.8f3d8806.chunk.css.map",
   "index.html": "/moneytoring/index.html",
-  "precache-manifest.d8961172aab55eb66c821eda3a6b2882.js": "/moneytoring/precache-manifest.d8961172aab55eb66c821eda3a6b2882.js",
+  "precache-manifest.2df57a79123e979091790f83277c2b55.js": "/moneytoring/precache-manifest.2df57a79123e979091790f83277c2b55.js",
   "service-worker.js": "/moneytoring/service-worker.js"
 }
