@@ -76,6 +76,23 @@ export const insert = (table, data, done) => {
   }
 }
 
+export const insertAsync = (table, data) => {
+  return new Promise((resolve, reject) => {
+    let db = indexedDB.open("Moneytoring");
+    db.onsuccess = (event) => {
+      let tx = event.target.result.transaction([table], "readwrite");
+      let store = tx.objectStore(table);
+      store.put(data);
+      tx.oncomplete = (event) => {
+        resolve(true);
+      }
+      tx.onerror = (event) => {
+        reject(false);
+      }
+    }
+  });
+}
+
 export const update = (table, data, done) => {
   let db = indexedDB.open("Moneytoring");
   db.onsuccess = (event) => {
@@ -89,6 +106,23 @@ export const update = (table, data, done) => {
       done(false);
     }
   }
+}
+
+export const updateAsync = (table, data) => {
+  return new Promise((resolve, reject) => {
+    let db = indexedDB.open("Moneytoring");
+    db.onsuccess = (event) => {
+      let tx = event.target.result.transaction([table], "readwrite");
+      let store = tx.objectStore(table);
+      store.put(data);
+      tx.oncomplete = (event) => {
+        resolve(true);
+      }
+      tx.onerror = (event) => {
+        reject(false);
+      }
+    }
+  });
 }
 
 export const remove = (table, id) => {

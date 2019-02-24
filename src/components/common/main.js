@@ -8,6 +8,9 @@ import EditExpense from '../expense/edit-expense';
 import Budget from '../budget/budget';
 import EditBudget from '../budget/edit-budget';
 import NewBudget from '../budget/new-budget';
+import Settings from "../settings/settings";
+import Account from "../account/account";
+import Category from "../category/category";
 
 class Main extends Component {
     render() {
@@ -21,6 +24,10 @@ class Main extends Component {
                 <Route path='/budget/edit/:id' component={EditBudget}/>
                 <Route path='/budget/new' component={NewBudget}/>
                 <Route path='/budget' component={Budget}/>
+                <Route path='/settings' component={Settings}/>
+                <Route path='/accounts' component={Account}/>
+                <Route path='/categories' component={Category}/>
+
                 <Route path='/' component={Dashboard}/>
             </Switch>
         </main>

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
 import HomeIcon from "@material-ui/icons/Home";
-import AttachMoneyICon from "@material-ui/icons/AttachMoney";
+//import AttachMoneyICon from "@material-ui/icons/AttachMoney";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import ListAlt from "@material-ui/icons/ListAlt";
+import Settings from "@material-ui/icons/Settings";
 
 class NavigationLinks extends Component {
     render() {
@@ -30,20 +28,29 @@ class NavigationLinks extends Component {
                 <ListItemText primary="Expense" />
               </ListItem>
             </Link>
-            <Link to='/income' style={{textDecoration: 'none'}}>
+            {/* <Link to='/income' style={{textDecoration: 'none'}}>
               <ListItem>
                 <ListItemIcon>
                     <AttachMoneyICon />
                 </ListItemIcon>
                 <ListItemText primary="Income" />
               </ListItem>
-            </Link>
+            </Link> */}
             <Link to='/budget' style={{textDecoration: 'none'}}>
               <ListItem>
                 <ListItemIcon>
                     <ListAlt />
                 </ListItemIcon>
                 <ListItemText primary="Budget" />
+              </ListItem>
+            </Link>
+            <Divider />
+            <Link to='/settings' style={{textDecoration: 'none'}}>
+              <ListItem>
+                <ListItemIcon>
+                    <Settings />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
               </ListItem>
             </Link>
           </List>

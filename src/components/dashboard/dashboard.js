@@ -16,7 +16,17 @@ const styles = {
     position: 'fixed', bottom: '15px', right: '15px', zIndex: 2
   },
   fabExpense: {
-    position: 'fixed', bottom: '150px', right: '23px', zIndex: 2
+    position: 'fixed', bottom: '90px', right: '23px', zIndex: 2
+  },
+  fabExpenseLabel: {
+    position: 'fixed',
+    zIndex: 2,
+    bottom: '98px',
+    color: 'white',
+    backgroundColor: 'black',
+    right: '70px',
+    padding: '3px 10px',
+    borderRadius: '5px',
   },
   fabIncome: {
     position: 'fixed', bottom: '90px', right: '23px', zIndex: 2
@@ -74,7 +84,7 @@ class Dashboard extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{paddingBottom: '50px'}}>
         <MyToolbarWithNavigation title="moneytoring" buttons={[]} />
         <div style={{ padding: '10px' }}>
           <ExpenseSummary />
@@ -87,11 +97,9 @@ class Dashboard extends Component {
         </div>
         {this.state.showMenu ?
           <>
+            <Typography component="p" style={styles.fabExpenseLabel}>new expense</Typography>
             <Fab onClick={this.newExpense} color="secondary" size="small" aria-label="expense" style={styles.fabExpense}>
               <MoneyOffIcon />
-            </Fab>
-            <Fab  color="default" size="small" aria-label="income" style={styles.fabIncome}>
-              <AttachMoneyICon />
             </Fab>
             <Backdrop onClick={this.toggleMenu} open={true} style={styles.backdrop} />
           </>

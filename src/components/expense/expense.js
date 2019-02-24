@@ -52,6 +52,11 @@ class Expense extends Component {
         to: moment().hours(23).minutes(59).seconds(59)
       }
     }
+
+    if (filter.selectedAccounts === undefined) {
+      filter.selectedAccounts= [{accountId: 0, name: "All"}];
+      filter.selectedCategories= [{categoryId: 0, name: "All"}];
+    }
     this.state = {
       currentFilter: '',
       total: 0,
@@ -62,15 +67,17 @@ class Expense extends Component {
   }
 
   componentDidMount() {
-    this.loadExpenses(this.state.filter.from, this.state.filter.to, this.state.filter.viewType);
+    this.loadExpenses(this.state.filter.from, this.state.filter.to, this.state.filter.viewType, this.state.filter.selectedAccounts, this.state.filter.selectedCategories);
   }
 
   toggleFilter = () => {
     this.setState({ ...this.state, showFilter: !this.state.showFilter });
   }
 
-  loadExpenses = (from, to, viewType) => {
-    let filter = { from, to, viewType};
+  loadExpenses = (from, to, viewType, selectedAccounts, selectedCategories) => {
+    let filter = { from, to, viewType, selectedAccounts, selectedCategories};
+    selectedAccounts = selectedAccounts.map(m => {return m.accountId});
+    selectedCategories = selectedCategories.map(m => {return m.categoryId});
     localStorage.setItem("expensefilter", JSON.stringify(filter));
     if (from.month() === to.month() && from.date() === to.date() && from.year() === to.year()) {
       this.setState({ ...this.state, expenses: [], currentFilter: from.format('MMM DD'), total: 0, filter });
@@ -95,8 +102,11 @@ class Expense extends Component {
       selectall.onsuccess = (event) => {
         var cursor = event.target.result;
         if (cursor) {
-          shits.push(cursor.value);
-          total += cursor.value.amount;
+          if ((selectedAccounts.indexOf(0) !== -1 || selectedAccounts.indexOf(cursor.value.accountId) !== -1) &&
+              (selectedCategories.indexOf(0) !== -1 || selectedCategories.indexOf(cursor.value.categoryId) !== -1)) {
+                shits.push(cursor.value);
+                total += cursor.value.amount;
+          }
           cursor.continue();
         }
       }
@@ -129,7 +139,7 @@ class Expense extends Component {
       to.endOf("month");
     }
     this.setState({ ...this.state, filter: { ...this.state.filter, from: from, to: to } });
-    this.loadExpenses(from, to, this.state.filter.viewType);
+    this.loadExpenses(from, to, this.state.filter.viewType, this.state.filter.selectedAccounts, this.state.filter.selectedCategories);
   }
 
   render() {

@@ -60,7 +60,7 @@ export const initialize = () => {
             if (selectAccounts.result.length === 0) {
                 var addAccountTransaction = db.transaction(["account"], "readwrite");
                 var accountStore1 = addAccountTransaction.objectStore("account");
-                accountStore1.put({name: "personal"});
+                accountStore1.put({name: "Personal"});
             }
         }
         //----------------------------------------------------------------
@@ -73,9 +73,9 @@ export const initialize = () => {
             if (selectCategories.result.length === 0) {
                 var addCategoriesTransaction = db.transaction(["category"], "readwrite");
                 var addCategoryStore = addCategoriesTransaction.objectStore("category");
-                addCategoryStore.put({name: "food"});
-                addCategoryStore.put({name: "transportation"});
-                addCategoryStore.put({name: "clothing"});
+                addCategoryStore.put({name: "Food"});
+                addCategoryStore.put({name: "Transportation"});
+                addCategoryStore.put({name: "Clothing"});
             }
         }
     }
