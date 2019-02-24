@@ -1,6 +1,10 @@
 # moneytoring
 
-A progressive web app for tracking expenses and working on a budget. Created using create-react-app and IndexedDB for data storage.
+A progressive web app for tracking expenses and working on a budget.
+
+Created using create-react-app and IndexedDB for data storage.
+
+Material UI for the design.
 
 ## Installation
 
