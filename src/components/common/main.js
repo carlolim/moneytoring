@@ -11,6 +11,8 @@ import NewBudget from '../budget/new-budget';
 import Settings from "../settings/settings";
 import Account from "../account/account";
 import Category from "../category/category";
+import ExpenseTemplate from "../expense-template/expense-template";
+import NewExpenseTemplate from "../expense-template/new-expense-template";
 
 class Main extends Component {
     render() {
@@ -27,6 +29,8 @@ class Main extends Component {
                 <Route path='/settings' component={Settings}/>
                 <Route path='/accounts' component={Account}/>
                 <Route path='/categories' component={Category}/>
+                <Route path='/expensetemplates/new' component={NewExpenseTemplate}/>
+                <Route path='/expensetemplates' component={ExpenseTemplate}/>
 
                 <Route path='/' component={Dashboard}/>
             </Switch>

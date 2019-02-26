@@ -159,7 +159,7 @@ class ExpenseSummary extends Component {
                     </div>
                 : null
             )}
-            {this.state.total === 0 ? <Typography variant="body1" className={classes.nothingToDoHere}>to do here: nothing</Typography> : null}
+            {this.state.total === 0 ? <Typography variant="body1" className={classes.nothingToDoHere}>no expense yet, go buy something, enjoy your money!</Typography> : null}
           </CardContent>
           <Divider />
           <CardActions className={classes.cardFooter}>

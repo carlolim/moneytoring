@@ -6,6 +6,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import ListAlt from "@material-ui/icons/ListAlt";
 import Settings from "@material-ui/icons/Settings";
+import File from "@material-ui/icons/InsertDriveFile";
 
 class NavigationLinks extends Component {
     render() {
@@ -26,6 +27,14 @@ class NavigationLinks extends Component {
                     <MoneyOffIcon />
                 </ListItemIcon>
                 <ListItemText primary="Expense" />
+              </ListItem>
+            </Link>
+            <Link to='/expensetemplates' style={{textDecoration: 'none'}}>
+              <ListItem>
+                <ListItemIcon>
+                    <File />
+                </ListItemIcon>
+                <ListItemText primary="Expense templates" />
               </ListItem>
             </Link>
             {/* <Link to='/income' style={{textDecoration: 'none'}}>

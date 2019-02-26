@@ -1,9 +1,18 @@
 
 export const initialize = () => {
-    var request = window.indexedDB.open("Moneytoring", 7);
+    var request = window.indexedDB.open("Moneytoring", 8);
     
     request.onupgradeneeded = function(event) {
         var db = event.target.result;
+
+        if (!db.objectStoreNames.contains('expenseTemplate')) {
+            var table = db.createObjectStore("expenseTemplate", { keyPath: "expenseTemplateId", autoIncrement: true });
+            table.createIndex("title", "title", { unique: false });
+            table.createIndex("amount", "amount", { unique: false });
+            table.createIndex("categoryId", "categoryId", { unique: false });
+            table.createIndex("accountId", "accountId", { unique: false });
+            table.createIndex("description", "description", { unique: false });
+        }
 
         if (!db.objectStoreNames.contains('expense')) {
             var expenseTable = db.createObjectStore("expense", { keyPath: "expenseId", autoIncrement: true });
