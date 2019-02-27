@@ -6,7 +6,7 @@ import moment from "moment";
 import { formatMoney, budgetRepeatEnum } from "../../helpers";
 import { selectAll, insert } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
-import Save from '@material-ui/icons/Save';
+import Done from '@material-ui/icons/Done';
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -184,7 +184,7 @@ class NewBudget extends Component {
                     showBackButton={true}
                     title="Add budget"
                     buttons={[
-                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
+                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Done /></IconButton>)
                     ]}
                 />
                 <div className="content">

@@ -6,7 +6,7 @@ import moment from "moment";
 import { formatMoney, budgetRepeatEnum } from "../../helpers";
 import { select, selectAll, update, remove } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
-import Save from '@material-ui/icons/Save';
+import Done from '@material-ui/icons/Done';
 import Delete from '@material-ui/icons/Delete';
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -216,7 +216,7 @@ class EditBudget extends Component {
                     title="Add budget"
                     buttons={[
                         (<IconButton onClick={this.toggleDeleteModal.bind(this)} color="inherit"><Delete /></IconButton>),
-                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
+                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Done /></IconButton>)
                     ]}
                 />
                 <div className="content">

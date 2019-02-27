@@ -5,13 +5,14 @@ import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import {
     List, ListItem, ListItemText,
     ListItemSecondaryAction, IconButton,
-    Divider, Fab, Typography
+    Divider, Fab, Dialog, DialogTitle,
+    DialogContent, DialogContentText, DialogActions,
+    Button
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from "@material-ui/icons/Delete"
-import { selectAll } from "../../helpers";
+import { selectAll, remove } from "../../helpers";
 import ThinkingMeme from "../../images/thinking-meme.png";
-
 
 const styles = {
     link: {
@@ -22,7 +23,7 @@ const styles = {
         bottom: 15,
         right: 15
     },
-    thinkingMeme:{
+    thinkingMeme: {
         width: 100,
         position: 'absolute',
         bottom: 0,
@@ -40,12 +41,26 @@ const styles = {
 
 class ExpenseTemplate extends Component {
     state = {
-        templates: []
+        templates: [],
+        showDelete: false,
+        idForDelete: 0
     }
 
     async componentDidMount() {
         var templates = await selectAll("expenseTemplate");
         this.setState({ ...this.state, templates });
+    }
+
+    toggleDelete = (id) => {
+        this.setState({...this.state, idForDelete: id, showDelete: !this.state.showDelete});
+    }
+
+    async delete() {
+        var result = await remove("expenseTemplate", this.state.idForDelete);
+        if (result) {
+            var templates = await selectAll("expenseTemplate");
+            this.setState({ ...this.state, templates, showDelete: false });
+        }
     }
 
     render() {
@@ -56,9 +71,9 @@ class ExpenseTemplate extends Component {
                     {this.state.templates.map((template, index) =>
                         <div key={index}>
                             <ListItem button onClick={() => { }}>
-                                <ListItemText primary={template.name} />
+                                <ListItemText primary={template.templateName} />
                                 <ListItemSecondaryAction>
-                                    <IconButton onClick={() => { }}>
+                                    <IconButton onClick={this.toggleDelete.bind(this, template.expenseTemplateId)}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -69,7 +84,6 @@ class ExpenseTemplate extends Component {
                 </List>
                 {this.state.templates.length === 0 ?
                     <>
-                        <Typography className={this.props.classes.noContent}>I wonder what this button do.</Typography>
                         <img src={ThinkingMeme} className={this.props.classes.thinkingMeme} />
                     </>
                     : null}
@@ -78,6 +92,19 @@ class ExpenseTemplate extends Component {
                     className={this.props.classes.addButton}>
                     <AddIcon />
                 </Fab>
+
+                <Dialog
+                    open={this.state.showDelete}>
+                    <DialogTitle>Confirm</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Are you sure you want to delete this template?</DialogContentText>
+                        <DialogContentText>This action cannot be undone.</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.toggleDelete.bind(this, 0)} color="primary" autoFocus>Cancel</Button>
+                        <Button onClick={this.delete.bind(this)} color="secondary">Delete</Button>
+                    </DialogActions>
+                </Dialog>
             </>
         )
     }

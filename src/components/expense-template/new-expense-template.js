@@ -2,16 +2,14 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import MyToolbar from "../common/my-toolbar";
-import moment from "moment";
-import { formatMoney, insertAsync } from "../../helpers";
+import { formatMoney, insertAsync, selectAll } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
-import Save from '@material-ui/icons/Save';
+import Done from '@material-ui/icons/Done';
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { selectAll, insert } from "../../helpers";
 
 const styles = {
     myClass: {
@@ -23,6 +21,7 @@ const styles = {
 
 class NewExpenseTemplate extends Component {
     state = {
+        templateName: '',
         title: '',
         categoryId: 0,
         amount: '',
@@ -31,6 +30,7 @@ class NewExpenseTemplate extends Component {
         accounts: [],
         categories: [],
         errors: {
+            templateName: false,
             title: false,
             category: false,
             amount: false,
@@ -61,6 +61,7 @@ class NewExpenseTemplate extends Component {
 
     async handleSave() {
         var data = {
+            templateName: this.state.templateName,
             title: this.state.title,
             categoryId: this.state.categoryId,
             accountId: this.state.accountId,
@@ -70,10 +71,15 @@ class NewExpenseTemplate extends Component {
 
         let hasError = false;
         let errors = {
+            templateName: false,
             title: false,
             category: false,
             amount: false,
             account: false
+        }
+        if(data.templateName === '') {
+            errors.templateName = true;
+            hasError = true;
         }
         if (data.title === '') {
             errors.title = true;
@@ -98,7 +104,7 @@ class NewExpenseTemplate extends Component {
         else {
             var result = await insertAsync("expenseTemplate", data);
             if (result) {
-                this.props.history.push("/expense");
+                this.props.history.push("/expensetemplates");
             }
         }
     }
@@ -111,10 +117,18 @@ class NewExpenseTemplate extends Component {
                     showBackButton={true}
                     title="Add expense template"
                     buttons={[
-                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Save /></IconButton>)
+                        (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Done /></IconButton>)
                     ]}
                 />
                 <div className="content">
+                    <TextField
+                        error={this.state.errors.templateName}
+                        label="Template name"
+                        value={this.state.templateName}
+                        onChange={this.handleChangeProperty.bind(this, 'templateName')}
+                        margin="normal"
+                        className="form-control"
+                    />
                     <FormControl className="form-control" margin="normal">
                         <InputLabel>Account</InputLabel>
                         <Select

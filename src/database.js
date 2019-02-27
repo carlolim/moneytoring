@@ -8,6 +8,7 @@ export const initialize = () => {
         if (!db.objectStoreNames.contains('expenseTemplate')) {
             var table = db.createObjectStore("expenseTemplate", { keyPath: "expenseTemplateId", autoIncrement: true });
             table.createIndex("title", "title", { unique: false });
+            table.createIndex("templateName", "templateName", { unique: false });
             table.createIndex("amount", "amount", { unique: false });
             table.createIndex("categoryId", "categoryId", { unique: false });
             table.createIndex("accountId", "accountId", { unique: false });
