@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MyToolbar from "../common/my-toolbar";
 import moment from "moment";
-import { formatMoney } from "../../helpers";
+import { formatMoney, selectById } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Done from '@material-ui/icons/Done';
 import TextField from "@material-ui/core/TextField";
@@ -41,6 +41,7 @@ class NewExpense extends Component {
         selectAll("category").then((categories) => {
             this.setState({ ...this.state, categories });
         });
+        this.loadTemplate();
     }
 
     handleChangeProperty(property, e) {
@@ -55,6 +56,14 @@ class NewExpense extends Component {
     formatCurrency(e) {
         let value = formatMoney(this.state.amount);
         this.setState({ ...this.state, "amount": value });
+    }
+
+    async loadTemplate() {
+        let templateId = this.props.match.params.templateId;
+        if (templateId) {
+            var template = await selectById("expenseTemplate", Number(templateId));
+            this.setState({...this.state, ...template, amount: template.amount.toString()});
+        }
     }
 
     handleSave() {
