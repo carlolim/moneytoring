@@ -70,7 +70,7 @@ class ExpenseTemplate extends Component {
                 <List>
                     {this.state.templates.map((template, index) =>
                         <div key={index}>
-                            <ListItem button onClick={() => { }}>
+                            <ListItem button onClick={() => { this.props.history.push(`/expensetemplates/edit/${template.expenseTemplateId}`) }}>
                                 <ListItemText primary={template.templateName} />
                                 <ListItemSecondaryAction>
                                     <IconButton onClick={this.toggleDelete.bind(this, template.expenseTemplateId)}>

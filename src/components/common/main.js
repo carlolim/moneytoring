@@ -13,6 +13,7 @@ import Account from "../account/account";
 import Category from "../category/category";
 import ExpenseTemplate from "../expense-template/expense-template";
 import NewExpenseTemplate from "../expense-template/new-expense-template";
+import EditExpenseTemplate from "../expense-template/edit-expense-template";
 
 class Main extends Component {
     render() {
@@ -21,7 +22,7 @@ class Main extends Component {
             <Switch>
                 <Route path='/income' component={Income}/>
                 <Route path='/expense/edit/:id' component={EditExpense} />
-                <Route path='/expense/new' component={NewExpense} />
+                <Route path='/expense/new/:templateId' component={NewExpense} />
                 <Route path='/expense' component={Expense}/>
                 <Route path='/budget/edit/:id' component={EditBudget}/>
                 <Route path='/budget/new' component={NewBudget}/>
@@ -29,6 +30,7 @@ class Main extends Component {
                 <Route path='/settings' component={Settings}/>
                 <Route path='/accounts' component={Account}/>
                 <Route path='/categories' component={Category}/>
+                <Route path='/expensetemplates/edit/:id' component={EditExpenseTemplate} />
                 <Route path='/expensetemplates/new' component={NewExpenseTemplate}/>
                 <Route path='/expensetemplates' component={ExpenseTemplate}/>
 

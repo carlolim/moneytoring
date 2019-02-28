@@ -1,35 +1,46 @@
 import React, { Component } from 'react';
+import { withStyles } from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
 import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
-import { Typography, Fab, Backdrop, Divider } from "@material-ui/core";
+import { Typography, Fab, Backdrop } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-import AttachMoneyICon from "@material-ui/icons/AttachMoney";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import ExpenseSummary from "./widgets/expense-summary";
 import BudgetSummary from "./widgets/budget-summary";
 import { selectAll, budgetRepeatEnum } from "../../helpers";
 import { validateBudget } from "../../modules/budget-module";
+import File from "@material-ui/icons/InsertDriveFile";
 
 
 const styles = {
   fabPrimary: {
-    position: 'fixed', bottom: '15px', right: '15px', zIndex: 2
+    position: 'fixed', bottom: 15, right: 15, zIndex: 2
   },
   fabExpense: {
-    position: 'fixed', bottom: '90px', right: '23px', zIndex: 2
+    position: 'fixed', bottom: 90, right: 23, zIndex: 2
   },
   fabExpenseLabel: {
     position: 'fixed',
     zIndex: 2,
-    bottom: '98px',
+    bottom: 98,
     color: 'white',
     backgroundColor: 'black',
-    right: '70px',
+    right: 70,
     padding: '3px 10px',
-    borderRadius: '5px',
+    borderRadius: 5,
   },
-  fabIncome: {
-    position: 'fixed', bottom: '90px', right: '23px', zIndex: 2
+  fabTemplate: {
+    position: 'fixed', right: 23, zIndex: 2
+  },
+  fabTemplateLabel: {
+    position: 'fixed',
+    zIndex: 2,
+    color: 'white',
+    backgroundColor: 'black',
+    right: 70,
+    padding: '3px 10px',
+    borderRadius: 5,
   },
   backdrop: {
     zIndex: 1
@@ -40,10 +51,14 @@ const styles = {
 }
 
 class Dashboard extends Component {
-  state = { showMenu: false, daily: [], weekly: [], monthly: [], nonRepeating: [] }
+  state = {
+    showMenu: false, daily: [], weekly: [], monthly: [], nonRepeating: [],
+    expenseTemplates: []
+  }
 
   componentDidMount() {
     this.loadBudgets();
+    this.loadExpenseTemplates();
   }
 
   loadBudgets() {
@@ -74,12 +89,22 @@ class Dashboard extends Component {
     });
   }
 
+  async loadExpenseTemplates() {
+    var expenseTemplates = await selectAll("expenseTemplate");
+    this.setState({...this.state, expenseTemplates});
+  }
+
   toggleMenu = () => {
     this.setState({ ...this.state, showMenu: !this.state.showMenu });
   }
 
-  newExpense = () => {
-    this.props.history.push('/expense/new');
+  newExpense = (id) => {
+    if (id === null) {
+      this.props.history.push('/expense/new');
+    }
+    else {
+      this.props.history.push(`/expense/new/${id}`);
+    }
   }
 
   render() {
@@ -90,21 +115,24 @@ class Dashboard extends Component {
           <ExpenseSummary />
         </div>
         <div style={{ padding: '10px' }}>
-          <RenderBudget items={this.state.nonRepeating} />
-          <RenderBudget items={this.state.daily} />
-          <RenderBudget items={this.state.weekly} />
-          <RenderBudget items={this.state.monthly} />
+          <RenderBudgetGroup items={this.state.nonRepeating} />
+          <RenderBudgetGroup items={this.state.daily} />
+          <RenderBudgetGroup items={this.state.weekly} />
+          <RenderBudgetGroup items={this.state.monthly} />
         </div>
         {this.state.showMenu ?
           <>
-            <Typography component="p" style={styles.fabExpenseLabel}>new expense</Typography>
-            <Fab onClick={this.newExpense} color="secondary" size="small" aria-label="expense" style={styles.fabExpense}>
+            {this.state.expenseTemplates.map((template, index) => 
+              <RenderTemplate key={index} keyIndex={Number(index)} data={template} classes={this.props.classes} templateClicked={this.newExpense.bind(this, template.expenseTemplateId)} />
+            )}
+            <Typography component="p" className={this.props.classes.fabExpenseLabel}>new expense</Typography>
+            <Fab onClick={this.newExpense.bind(this, null)} color="secondary" size="small" aria-label="expense" className={this.props.classes.fabExpense}>
               <MoneyOffIcon />
             </Fab>
-            <Backdrop onClick={this.toggleMenu} open={true} style={styles.backdrop} />
+            <Backdrop onClick={this.toggleMenu} open={true} className={this.props.classes.backdrop} />
           </>
           : null}
-        <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" style={styles.fabPrimary}>
+        <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" className={this.props.classes.fabPrimary}>
           {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
         </Fab>
       </div>
@@ -112,7 +140,7 @@ class Dashboard extends Component {
   }
 }
 
-const RenderBudget = (props) => (
+const RenderBudgetGroup = (props) => (
   <>
     {props.items.length > 0 ?
       <>
@@ -124,4 +152,17 @@ const RenderBudget = (props) => (
   </>
 )
 
-export default Dashboard;
+const RenderTemplate = (props) => (
+  <>
+    <Typography component="p" style={{bottom: `${((props.keyIndex+1)*55)+90}px`}} className={props.classes.fabTemplateLabel}>{props.data.templateName}</Typography>
+    <Fab onClick={props.templateClicked} style={{bottom: `${((props.keyIndex+1)*50)+90}px`}} color="default" size="small" aria-label="expense" className={props.classes.fabTemplate}>
+      <File />
+    </Fab>
+  </>
+)
+
+Dashboard.propTypes = {
+  classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(Dashboard);

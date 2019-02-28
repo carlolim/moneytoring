@@ -10,6 +10,20 @@ export const formatMoney = (n, c, d, t) => {
   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
+export const selectById = (table, id) => {
+  return new Promise((resolve, reject) => {
+    let db = indexedDB.open("Moneytoring");
+    db.onsuccess = (event) => {
+      let tx = event.target.result.transaction([table], "readonly");
+      let store = tx.objectStore(table);
+      let result = store.get(id);
+      result.onsuccess = (event) => {
+        resolve(event.target.result);
+      }
+    }
+  });
+}
+
 export const selectAll = (table) => {
   return new Promise((resolve, reject) => {
     let db = indexedDB.open("Moneytoring");

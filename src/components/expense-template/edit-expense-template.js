@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 import MyToolbar from "../common/my-toolbar";
-import { formatMoney, insertAsync, selectAll } from "../../helpers";
+import { formatMoney, selectAll, selectById, updateAsync } from "../../helpers";
 import IconButton from '@material-ui/core/IconButton';
 import Done from '@material-ui/icons/Done';
 import TextField from "@material-ui/core/TextField";
@@ -21,6 +21,7 @@ const styles = {
 
 class EditExpenseTemplate extends Component {
     state = {
+        expenseTemplateId: 0,
         templateName: '',
         title: '',
         categoryId: 0,
@@ -41,8 +42,9 @@ class EditExpenseTemplate extends Component {
     async componentDidMount() {
         var accounts = await selectAll("account");
         var categories = await selectAll("category");
-        var template = await select
-        this.setState({...this.state, accounts, categories});
+        var template = await selectById("expenseTemplate", Number(this.props.match.params.id));
+        template.amount = template.amount.toString();
+        this.setState({...this.state, ...template, accounts, categories});
     }
 
     handleChangeProperty(property, e) {
@@ -62,6 +64,7 @@ class EditExpenseTemplate extends Component {
 
     async handleSave() {
         var data = {
+            expenseTemplateId: this.state.expenseTemplateId,
             templateName: this.state.templateName,
             title: this.state.title,
             categoryId: this.state.categoryId,
@@ -103,7 +106,7 @@ class EditExpenseTemplate extends Component {
             this.setState({ ...this.state, errors });
         }
         else {
-            var result = await insertAsync("expenseTemplate", data);
+            var result = await updateAsync("expenseTemplate", data);
             if (result) {
                 this.props.history.push("/expensetemplates");
             }
@@ -116,7 +119,7 @@ class EditExpenseTemplate extends Component {
                 <MyToolbar
                     onBack={() => { this.props.history.goBack() }}
                     showBackButton={true}
-                    title="Add expense template"
+                    title="Edit expense template"
                     buttons={[
                         (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Done /></IconButton>)
                     ]}
