@@ -188,7 +188,7 @@ class Expense extends Component {
           <Filter close={this.toggleFilter.bind(this)} applyFilter={this.loadExpenses.bind(this)} />
         </Dialog>
 
-        <Fab onClick={() => { this.props.history.push("/expense/new") }} color="primary" aria-label="Add" style={{ position: 'fixed', bottom: '15px', right: '15px' }}>
+        <Fab onClick={() => { this.props.history.push("/expense/new/0") }} color="primary" aria-label="Add" style={{ position: 'fixed', bottom: '15px', right: '15px' }}>
           <AddIcon />
         </Fab>
       </div>

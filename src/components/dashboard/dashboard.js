@@ -99,12 +99,7 @@ class Dashboard extends Component {
   }
 
   newExpense = (id) => {
-    if (id === null) {
-      this.props.history.push('/expense/new');
-    }
-    else {
-      this.props.history.push(`/expense/new/${id}`);
-    }
+    this.props.history.push(`/expense/new/${id}`);
   }
 
   render() {
@@ -126,7 +121,7 @@ class Dashboard extends Component {
               <RenderTemplate key={index} keyIndex={Number(index)} data={template} classes={this.props.classes} templateClicked={this.newExpense.bind(this, template.expenseTemplateId)} />
             )}
             <Typography component="p" className={this.props.classes.fabExpenseLabel}>new expense</Typography>
-            <Fab onClick={this.newExpense.bind(this, null)} color="secondary" size="small" aria-label="expense" className={this.props.classes.fabExpense}>
+            <Fab onClick={this.newExpense.bind(this, 0)} color="secondary" size="small" aria-label="expense" className={this.props.classes.fabExpense}>
               <MoneyOffIcon />
             </Fab>
             <Backdrop onClick={this.toggleMenu} open={true} className={this.props.classes.backdrop} />

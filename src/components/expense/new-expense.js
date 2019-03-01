@@ -60,8 +60,8 @@ class NewExpense extends Component {
 
     async loadTemplate() {
         let templateId = this.props.match.params.templateId;
-        if (templateId) {
-            var template = await selectById("expenseTemplate", Number(templateId));
+        var template = await selectById("expenseTemplate", Number(templateId));
+        if (template) {
             this.setState({...this.state, ...template, amount: template.amount.toString()});
         }
     }
