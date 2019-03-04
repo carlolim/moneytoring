@@ -4,7 +4,7 @@ import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import './expense.css';
 import Filter from "../common/filter";
 import moment from "moment";
-import { formatMoney } from "../../helpers";
+import { formatMoney, selectAll } from "../../helpers";
 import {
   IconButton,
   Dialog,
@@ -15,16 +15,50 @@ import {
   Fab,
   AppBar,
   Toolbar,
-  Divider
+  Divider,Backdrop
 } from '@material-ui/core';
 import FilterList from '@material-ui/icons/FilterList';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
+import CloseIcon from '@material-ui/icons/Close';
+import MoneyOffIcon from "@material-ui/icons/MoneyOff";
+import File from "@material-ui/icons/InsertDriveFile";
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
 
 const styles = {
+  fabPrimary: {
+    position: 'fixed', bottom: 15, right: 15, zIndex: 2
+  },
+  fabExpense: {
+    position: 'fixed', bottom: 90, right: 23, zIndex: 2
+  },
+  fabExpenseLabel: {
+    position: 'fixed',
+    zIndex: 2,
+    bottom: 98,
+    color: 'white',
+    backgroundColor: 'black',
+    right: 70,
+    padding: '3px 10px',
+    borderRadius: 5,
+  },
+  fabTemplate: {
+    position: 'fixed', right: 23, zIndex: 2
+  },
+  fabTemplateLabel: {
+    position: 'fixed',
+    zIndex: 2,
+    color: 'white',
+    backgroundColor: 'black',
+    right: 70,
+    padding: '3px 10px',
+    borderRadius: 5,
+  },
+  backdrop: {
+    zIndex: 1
+  },
   appBar: {
       position: 'fixed',
       marginTop: 56,
@@ -33,6 +67,11 @@ const styles = {
   filterLabel:{
     flexGrow: 1,
     textAlign: 'center'
+  },
+  listItem: {
+    marginTop: '56px', 
+    overflowY: 'auto', 
+    minHeight: '100%'
   }
 }
 
@@ -62,12 +101,15 @@ class Expense extends Component {
       total: 0,
       expenses: [],
       showFilter: false,
-      filter
+      filter,
+      expenseTemplates: [],
+      showMenu: false
     }
   }
 
   componentDidMount() {
     this.loadExpenses(this.state.filter.from, this.state.filter.to, this.state.filter.viewType, this.state.filter.selectedAccounts, this.state.filter.selectedCategories);
+    this.loadExpenseTemplates();
   }
 
   toggleFilter = () => {
@@ -142,6 +184,24 @@ class Expense extends Component {
     this.loadExpenses(from, to, this.state.filter.viewType, this.state.filter.selectedAccounts, this.state.filter.selectedCategories);
   }
 
+  async loadExpenseTemplates() {
+    var expenseTemplates = await selectAll("expenseTemplate");
+    this.setState({...this.state, expenseTemplates});
+  }
+
+  toggleMenu = () => {
+    if (this.state.expenseTemplates.length === 0) {
+      this.newExpense(0);
+    }
+    else {
+      this.setState({ ...this.state, showMenu: !this.state.showMenu });
+    }
+  }
+
+  newExpense = (id) => {
+    this.props.history.push(`/expense/new/${id}`);
+  }
+
   render() {
     return (
       <div>
@@ -168,7 +228,7 @@ class Expense extends Component {
           </Toolbar>
         </AppBar>
 
-        <div style={{ marginTop: '56px', overflowY: 'auto', minHeight: '100%' }}>
+        <div className={this.props.classes.listItem}>
           <List component="nav">
             {this.state.expenses.map(item =>
               <Link key={item.expenseId} style={{ textDecoration: 'none' }} className="list-item" to={'/expense/edit/' + item.expenseId}>
@@ -188,13 +248,34 @@ class Expense extends Component {
           <Filter close={this.toggleFilter.bind(this)} applyFilter={this.loadExpenses.bind(this)} />
         </Dialog>
 
-        <Fab onClick={() => { this.props.history.push("/expense/new/0") }} color="primary" aria-label="Add" style={{ position: 'fixed', bottom: '15px', right: '15px' }}>
-          <AddIcon />
+        {this.state.showMenu ?
+          <>
+            {this.state.expenseTemplates.map((template, index) => 
+              <RenderTemplate key={index} keyIndex={Number(index)} data={template} classes={this.props.classes} templateClicked={this.newExpense.bind(this, template.expenseTemplateId)} />
+            )}
+            <Typography component="p" className={this.props.classes.fabExpenseLabel}>new expense</Typography>
+            <Fab onClick={this.newExpense.bind(this, 0)} color="secondary" size="small" aria-label="expense" className={this.props.classes.fabExpense}>
+              <MoneyOffIcon />
+            </Fab>
+            <Backdrop onClick={this.toggleMenu} open={true} className={this.props.classes.backdrop} />
+          </>
+          : null}
+        <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" className={this.props.classes.fabPrimary}>
+          {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
         </Fab>
       </div>
     );
   }
 }
+
+const RenderTemplate = (props) => (
+  <>
+    <Typography component="p" style={{bottom: `${((props.keyIndex+1)*55)+90}px`}} className={props.classes.fabTemplateLabel}>{props.data.templateName}</Typography>
+    <Fab onClick={props.templateClicked} style={{bottom: `${((props.keyIndex+1)*50)+90}px`}} color="default" size="small" aria-label="expense" className={props.classes.fabTemplate}>
+      <File />
+    </Fab>
+  </>
+)
 
 Expense.propTypes = {
   classes: PropTypes.object.isRequired
