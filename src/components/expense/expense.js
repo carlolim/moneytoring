@@ -202,6 +202,13 @@ class Expense extends Component {
     this.props.history.push(`/expense/new/${id}`);
   }
 
+  getCurrentFilter = () => {
+    var expenseFilter = localStorage.getItem("expensefilter");
+    if (expenseFilter !== null && expenseFilter !== undefined)
+      expenseFilter = JSON.parse(expenseFilter);
+    return expenseFilter;
+  }
+
   render() {
     return (
       <div>
@@ -234,7 +241,7 @@ class Expense extends Component {
               <Link key={item.expenseId} style={{ textDecoration: 'none' }} className="list-item" to={'/expense/edit/' + item.expenseId}>
                 <ListItem button>
                   <ListItemText primary={item.title} secondary={moment(item.date).format('MMM DD hh:mma (ddd)')} />
-                  <Typography className="float-right">{formatMoney(item.amount)}</Typography >
+                  <Typography className="float-right">{formatMoney(item.amount)}</Typography>
                 </ListItem>
                 <Divider light />
               </Link>
@@ -245,7 +252,9 @@ class Expense extends Component {
         <Dialog
           onClose={this.toggleFilter}
           open={this.state.showFilter}>
-          <Filter close={this.toggleFilter.bind(this)} applyFilter={this.loadExpenses.bind(this)} />
+          <Filter
+            currentfilter={this.getCurrentFilter()}
+            close={this.toggleFilter.bind(this)} applyFilter={this.loadExpenses.bind(this)} />
         </Dialog>
 
         {this.state.showMenu ?

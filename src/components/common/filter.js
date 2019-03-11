@@ -64,28 +64,41 @@ class Filter extends Component {
         categories.unshift({ categoryId: 0, name: "All" })
         this.setState({ ...this.state, accounts, categories });
 
-        let currentFilter = localStorage.getItem("expensefilter");
-        if (currentFilter !== null && currentFilter !== undefined) {
-            currentFilter = JSON.parse(currentFilter);
-            if (currentFilter.selectedAccounts !== undefined && currentFilter.selectedCategories !== undefined) {
-                if (currentFilter.selectedAccounts[0].accountId === 0) {
-                    this.setState({...this.state, selectedAccounts: accounts});
-                }
-                else {
-                    this.setState({ ...this.state, 
-                        selectedAccounts: currentFilter.selectedAccounts.map(a => accounts.find(m => { return m.accountId === a.accountId }))
-                    });
-                }
-
-                if (currentFilter.selectedCategories[0].categoryId === 0) {
-                    this.setState({...this.state, selectedCategories: categories});
-                }
-                else {
-                    this.setState({ ...this.state, 
-                        selectedCategories: currentFilter.selectedCategories.map(c => categories.find(m => { return m.categoryId === c.categoryId }))
-                    });
-                }
+        let currentFilter = this.props.currentfilter; //localStorage.getItem("expensefilter");
+        if (currentFilter !== null && currentFilter !== undefined && currentFilter.selectedAccounts !== undefined && currentFilter.selectedCategories !== undefined) {
+            if (currentFilter.selectedAccounts[0].accountId !== 0) {
+                accounts = currentFilter.selectedAccounts.map(a => accounts.find(m => { return m.accountId === a.accountId }));
             }
+            if (currentFilter.selectedCategories[0].categoryId !== 0) {
+                categories = currentFilter.selectedCategories.map(c => categories.find(m => { return m.categoryId === c.categoryId }));
+            }
+
+            //retain filter options
+            var filterTypeValue;
+            var date = moment(currentFilter.to);
+            switch (currentFilter.viewType) {
+                case 'daily':
+                    filterTypeValue = { date: date.format('YYYY-MM-DD') };
+                    break;
+                case 'weekly':
+                    filterTypeValue = { week: `${date.format('YYYY')}-W${date.format('WW')}`};
+                    break;
+                case 'monthly':
+                    filterTypeValue = { month: `${date.format('YYYY')}-${date.format('MM')}`};
+                    break;
+                case 'yearly':
+                    filterTypeValue = { year: date.format('YYYY')};
+                    break;
+                case 'custom':
+                    filterTypeValue = {from: moment(currentFilter.from).format('YYYY-MM-DD'), to: moment(currentFilter.to).format('YYYY-MM-DD')};
+                    break;
+            }
+            this.setState({...this.state, 
+                selectedAccounts: accounts, 
+                selectedCategories: categories, 
+                viewType: currentFilter.viewType,
+                [currentFilter.viewType]: filterTypeValue
+            });
         }
     }
 

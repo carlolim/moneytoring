@@ -15,6 +15,9 @@ import ExpenseTemplate from "../expense-template/expense-template";
 import NewExpenseTemplate from "../expense-template/new-expense-template";
 import EditExpenseTemplate from "../expense-template/edit-expense-template";
 import DetailsBudget from '../budget/details-budget';
+import NewAccount from "../account/new-account";
+import EditAccount from "../account/edit-account";
+import Transfer from "../account/transfer";
 
 class Main extends Component {
     render() {
@@ -31,6 +34,9 @@ class Main extends Component {
                 <Route exact path='/budget/details/:id' component={DetailsBudget} />
                 <Route exact path='/settings' component={Settings}/>
                 <Route exact path='/accounts' component={Account}/>
+                <Route exact path='/accounts/new' component={NewAccount}/>
+                <Route exact path='/accounts/edit/:id' component={EditAccount}/>
+                <Route exact path='/accounts/transfer' component={Transfer}/>
                 <Route exact path='/categories' component={Category}/>
                 <Route exact path='/expensetemplates/edit/:id' component={EditExpenseTemplate} />
                 <Route exact path='/expensetemplates/new' component={NewExpenseTemplate}/>

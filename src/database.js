@@ -1,6 +1,6 @@
 
 export const initialize = () => {
-    var request = window.indexedDB.open("Moneytoring", 8);
+    var request = window.indexedDB.open("Moneytoring", 9); //account table changes
     
     request.onupgradeneeded = function(event) {
         var db = event.target.result;
@@ -29,6 +29,15 @@ export const initialize = () => {
         if (!db.objectStoreNames.contains('account')) {
             var accountTable = db.createObjectStore("account", { keyPath: "accountId", autoIncrement: true });
             accountTable.createIndex("name", "name", { unique: false });
+            accountTable.createIndex("trackBalance", "trackBalance", { unique: false });
+            accountTable.createIndex("balance", "balance", { unique: false });
+            accountTable.createIndex("startDate", "startDate", { unique: false });
+        }
+        else {
+            var accountTable = event.currentTarget.transaction.objectStore("account");
+            if (!accountTable.indexNames.contains("trackBalance")) accountTable.createIndex("trackBalance", "trackBalance", { unique: false });
+            if (!accountTable.indexNames.contains("balance")) accountTable.createIndex("balance", "balance", { unique: false });
+            if (!accountTable.indexNames.contains("startDate")) accountTable.createIndex("startDate", "startDate", { unique: false });
         }
 
         if (!db.objectStoreNames.contains('category')) {
@@ -48,6 +57,7 @@ export const initialize = () => {
             budgetTable.createIndex("categoryIds", "categoryIds", { unique: false});
             budgetTable.createIndex("ledger", "ledger", { unique: false});
             budgetTable.createIndex("noEndDate", "noEndDate", { unique: false});
+            budgetTable.createIndex("showInDashboard", "showInDashboard", { unique: false});
         }
         else {
             var budgetTable = event.currentTarget.transaction.objectStore("budget");
