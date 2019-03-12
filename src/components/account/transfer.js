@@ -5,7 +5,8 @@ import MyToolbar from "../common/my-toolbar";
 import Done from '@material-ui/icons/Done';
 import {
     Typography, FormControl, InputLabel, Select,
-    MenuItem, TextField, IconButton, Snackbar, Button
+    MenuItem, TextField, IconButton, Snackbar, Button,
+    InputAdornment
 } from "@material-ui/core";
 import { selectAll, formatMoney, selectById, updateBulk } from "../../helpers";
 
@@ -70,8 +71,12 @@ class Transfer extends Component {
         let value = formatMoney(this.state.amount);
         this.setState({ ...this.state, "amount": value });
     }
-    closeSnackbar () {
-        this.setState({...this.state, errors: {...this.state.errors, showSnackbar: false }});
+    closeSnackbar() {
+        this.setState({ ...this.state, errors: { ...this.state.errors, showSnackbar: false } });
+    }
+
+    allIn() {
+        this.setState({...this.state, amount: this.state.fromAccount.balance})
     }
     async handleSave() {
         var data = {
@@ -176,6 +181,13 @@ class Transfer extends Component {
                         margin="normal"
                         className="form-control"
                         onBlur={this.formatCurrency.bind(this)}
+                        InputProps={{
+                            endAdornment:(
+                                <InputAdornment position="end">
+                                    <Button onClick={this.allIn.bind(this)} color="primary">all in</Button>
+                                </InputAdornment>
+                            )
+                        }}
                     />
                 </div>
                 <Snackbar

@@ -8,8 +8,8 @@ import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import ListAlt from "@material-ui/icons/ListAlt";
 import Settings from "@material-ui/icons/Settings";
 import File from "@material-ui/icons/InsertDriveFile";
-import Account from "@material-ui/icons/AccountCircle"
-import BackGround from "../../images/aplaya.png"
+import Account from "@material-ui/icons/AccountCircle";
+import BackGround from "../../images/aplaya.png";
 
 const styles = {
   background: {

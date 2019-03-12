@@ -11,6 +11,7 @@ import BudgetSummary from "./widgets/budget-summary";
 import { selectAll, budgetRepeatEnum } from "../../helpers";
 import { validateBudget } from "../../modules/budget-module";
 import File from "@material-ui/icons/InsertDriveFile";
+import Swap from "@material-ui/icons/SwapHoriz";
 
 
 const styles = {
@@ -18,9 +19,22 @@ const styles = {
     position: 'fixed', bottom: 15, right: 15, zIndex: 2
   },
   fabExpense: {
-    position: 'fixed', bottom: 90, right: 23, zIndex: 2
+    position: 'fixed', bottom: 140, right: 23, zIndex: 2
   },
   fabExpenseLabel: {
+    position: 'fixed',
+    zIndex: 2,
+    bottom: 148,
+    color: 'white',
+    backgroundColor: 'black',
+    right: 70,
+    padding: '3px 10px',
+    borderRadius: 5,
+  },
+  fabTransfer: {
+    position: 'fixed', bottom: 90, right: 23, zIndex: 2
+  },
+  fabTransferLabel: {
     position: 'fixed',
     zIndex: 2,
     bottom: 98,
@@ -121,13 +135,17 @@ class Dashboard extends Component {
               <RenderTemplate key={index} keyIndex={Number(index)} data={template} classes={this.props.classes} templateClicked={this.newExpense.bind(this, template.expenseTemplateId)} />
             )}
             <Typography component="p" className={this.props.classes.fabExpenseLabel}>new expense</Typography>
-            <Fab onClick={this.newExpense.bind(this, 0)} color="secondary" size="small" aria-label="expense" className={this.props.classes.fabExpense}>
+            <Fab onClick={this.newExpense.bind(this, 0)} color="secondary" size="small" className={this.props.classes.fabExpense}>
               <MoneyOffIcon />
+            </Fab>
+            <Typography component="p" className={this.props.classes.fabTransferLabel}>balance transfer</Typography>
+            <Fab onClick={() => {this.props.history.push('/accounts/transfer')}} size="small" color="primary" className={this.props.classes.fabTransfer}>
+              <Swap />
             </Fab>
             <Backdrop onClick={this.toggleMenu} open={true} className={this.props.classes.backdrop} />
           </>
           : null}
-        <Fab onClick={this.toggleMenu} color="primary" aria-label="Add" className={this.props.classes.fabPrimary}>
+        <Fab onClick={this.toggleMenu} color="primary" className={this.props.classes.fabPrimary}>
           {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
         </Fab>
       </div>
@@ -149,8 +167,8 @@ const RenderBudgetGroup = (props) => (
 
 const RenderTemplate = (props) => (
   <>
-    <Typography component="p" style={{bottom: `${((props.keyIndex+1)*55)+90}px`}} className={props.classes.fabTemplateLabel}>{props.data.templateName}</Typography>
-    <Fab onClick={props.templateClicked} style={{bottom: `${((props.keyIndex+1)*50)+90}px`}} color="default" size="small" aria-label="expense" className={props.classes.fabTemplate}>
+    <Typography component="p" style={{bottom: `${((props.keyIndex+1)*55)+140}px`}} className={props.classes.fabTemplateLabel}>{props.data.templateName}</Typography>
+    <Fab onClick={props.templateClicked} style={{bottom: `${((props.keyIndex+1)*50)+140}px`}} color="default" size="small" aria-label="expense" className={props.classes.fabTemplate}>
       <File />
     </Fab>
   </>

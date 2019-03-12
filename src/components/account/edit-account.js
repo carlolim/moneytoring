@@ -1,12 +1,19 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types';
-import { Typography, TextField, FormControlLabel, Switch } from "@material-ui/core";
+import { 
+    Typography, TextField, FormControlLabel, 
+    Switch, Dialog, DialogTitle, 
+    DialogContent,
+    DialogActions, Button,
+    DialogContentText
+} from "@material-ui/core";
 import MyToolbar from "../common/my-toolbar";
 import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from "@material-ui/icons/Delete"
 import Done from '@material-ui/icons/Done';
 import moment from "moment";
-import { formatMoney, selectById, updateAsync } from "../../helpers";
+import { formatMoney, selectById, updateAsync, remove } from "../../helpers";
 
 const styles = {
 }
@@ -23,7 +30,8 @@ class EditAccount extends Component {
             trackBalance: false,
             balance: false,
             startDate: false
-        }
+        },
+        showDeleteModal: false
     }
 
     async componentDidMount() {
@@ -47,7 +55,12 @@ class EditAccount extends Component {
         let value = formatMoney(this.state.balance);
         this.setState({ ...this.state, "balance": value });
     }
-
+    async delete() {
+        var result = await remove("account", this.state.accountId);
+        if (result) {
+            this.props.history.goBack();
+        }
+    }
     async handleSave() {
         var data = {
             accountId: this.state.accountId,
@@ -96,6 +109,9 @@ class EditAccount extends Component {
                     showBackButton={true}
                     title="Edit account"
                     buttons={[
+                        this.state.accountId !==1 ?
+                        (<IconButton onClick={() => {this.setState({...this.state, showDeleteModal: true})}} color="inherit"><DeleteIcon /></IconButton>)
+                        : null,
                         (<IconButton onClick={this.handleSave.bind(this)} color="inherit"><Done /></IconButton>)
                     ]}
                 />
@@ -144,10 +160,30 @@ class EditAccount extends Component {
                             />
                         </> : null}
                 </div>
+                <DeleteModal
+                    isOpen={this.state.showDeleteModal}
+                    close={() => this.setState({ ...this.state, showDeleteModal: false })}
+                    delete={this.delete.bind(this)}
+                />
             </>
         )
     }
 }
+
+const DeleteModal = (props) => (
+    <Dialog
+        open={props.isOpen}>
+        <DialogTitle>Confirm</DialogTitle>
+        <DialogContent>
+            <DialogContentText>Are you sure you want to delete this account?</DialogContentText>
+            <DialogContentText>This action cannot be undone.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={props.close} color="primary" autoFocus>Cancel</Button>
+            <Button onClick={props.delete} color="secondary">Delete</Button>
+        </DialogActions>
+    </Dialog>
+)
 
 EditAccount.propTypes = {
     classes: PropTypes.object.isRequired

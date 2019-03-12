@@ -6,16 +6,18 @@ import {
     ListItem,
     ListItemText,
     Divider,
-    Fab, Dialog, DialogTitle, DialogContent,
-    DialogActions, Button,
+    Fab,
     ListItemSecondaryAction,
     IconButton,
-    DialogContentText
+    Typography, Backdrop
 } from "@material-ui/core";
 import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from "@material-ui/icons/Delete"
-import { selectAll, updateAsync, remove } from "../../helpers";
+import CloseIcon from '@material-ui/icons/Close';
+import AccountIcon from "@material-ui/icons/AccountCircle";
+import Swap from "@material-ui/icons/SwapHoriz";
+import { selectAll } from "../../helpers";
 
 const styles = {
     link: {
@@ -26,27 +28,39 @@ const styles = {
         bottom: 15,
         right: 15
     },
+    fabAccount: {
+      position: 'fixed', bottom: 140, right: 23, zIndex: 2
+    },
+    fabAccountLabel: {
+      position: 'fixed',
+      zIndex: 2,
+      bottom: 148,
+      color: 'white',
+      backgroundColor: 'black',
+      right: 70,
+      padding: '3px 10px',
+      borderRadius: 5,
+    },
+    fabTransfer: {
+      position: 'fixed', bottom: 90, right: 23, zIndex: 2
+    },
+    fabTransferLabel: {
+      position: 'fixed',
+      zIndex: 2,
+      bottom: 98,
+      color: 'white',
+      backgroundColor: 'black',
+      right: 70,
+      padding: '3px 10px',
+      borderRadius: 5,
+    },
 }
 
 
 class Account extends Component {
     state = {
         accounts: [],
-        new: {
-            showModal: false,
-            name: '',
-            error: false
-        },
-        edit: {
-            accountId: 0,
-            showModal: false,
-            name: '',
-            error: false
-        },
-        delete: {
-            accountId: 0,
-            showModal: false
-        }
+        showMenu: false
     }
 
     async componentDidMount() {
@@ -54,34 +68,8 @@ class Account extends Component {
         this.setState({ ...this.state, accounts });
     }
 
-    showEditModal(accountId) {
-        var account = this.state.accounts.find(m => m.accountId === accountId);
-        if (account !== null && account !== undefined && account.accountId !== 1) {
-            this.setState({ ...this.state, edit: { accountId: account.accountId, name: account.name, error: false, showModal: true } })
-        }
-    }
-
-    async saveEdit() {
-        var name = this.state.edit.name;
-        this.setState({ ...this.state, edit: { ...this.state.edit, error: false } });
-        if (name === null || name === undefined || name === '') {
-            this.setState({ ...this.state, edit: { ...this.state.edit, error: true } });
-        }
-        else {
-            var result = await updateAsync("account", { accountId: this.state.edit.accountId, name });
-            if (result) {
-                var accounts = await selectAll("account");
-                this.setState({ ...this.state, accounts, edit: { ...this.state.edit, showModal: false } });
-            }
-        }
-    }
-
-    async delete() {
-        var result = await remove("account", this.state.delete.accountId);
-        if (result) {
-            var accounts = await selectAll("account");
-            this.setState({ ...this.state, accounts, delete: { accountId: 0, showModal: false } });
-        }
+    toggleMenu = () => {
+      this.setState({ ...this.state, showMenu: !this.state.showMenu });
     }
 
     render() {
@@ -92,47 +80,32 @@ class Account extends Component {
                     {this.state.accounts.map((account, index) =>
                         <div key={index}>
                             <ListItem button onClick={() => this.props.history.push(`accounts/edit/${account.accountId}`)}>
-                                <ListItemText primary={account.name} secondary={account.accountId === 1 ? "This is the default account, you can't delete this" : ""} />
-                                {account.accountId !== 1 ?
-                                    <ListItemSecondaryAction>
-                                        <IconButton onClick={() => this.setState({ ...this.state, delete: { accountId: account.accountId, showModal: true } })}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction> : null}
+                                <ListItemText primary={account.name} secondary={account.accountId === 1 ? "This is the default account." : ""} />
                             </ListItem>
                             <Divider />
                         </div>
                     )}
                 </List>
-                <Fab color="primary"
-                    onClick={() => this.props.history.push('accounts/new')}
-                    className={this.props.classes.addButton}>
-                    <AddIcon />
+                {this.state.showMenu ?
+                <>
+                    <Typography component="p" className={this.props.classes.fabAccountLabel}>new account</Typography>
+                    <Fab onClick={() => {this.props.history.push('/accounts/new')}} color="primary" size="small" className={this.props.classes.fabAccount}>
+                        <AccountIcon />
+                    </Fab>
+                    <Typography component="p" className={this.props.classes.fabTransferLabel}>balance transfer</Typography>
+                    <Fab onClick={() => {this.props.history.push('/accounts/transfer')}} size="small" color="primary" className={this.props.classes.fabTransfer}>
+                        <Swap />
+                    </Fab>
+                    <Backdrop onClick={this.toggleMenu} open={true} className={this.props.classes.backdrop} />
+                </>
+                : null}
+                <Fab onClick={this.toggleMenu} color="primary" className={this.props.classes.addButton}>
+                    {this.state.showMenu ? <CloseIcon /> : <AddIcon />}
                 </Fab>
-                <DeleteModal
-                    isOpen={this.state.delete.showModal}
-                    close={() => this.setState({ ...this.state, delete: { ...this.state.delete, showModal: false } })}
-                    delete={this.delete.bind(this)}
-                />
             </>
         )
     }
 }
-
-const DeleteModal = (props) => (
-    <Dialog
-        open={props.isOpen}>
-        <DialogTitle>Confirm</DialogTitle>
-        <DialogContent>
-            <DialogContentText>Are you sure you want to delete this account?</DialogContentText>
-            <DialogContentText>This action cannot be undone.</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.close} color="primary" autoFocus>Cancel</Button>
-            <Button onClick={props.delete} color="secondary">Delete</Button>
-        </DialogActions>
-    </Dialog>
-)
 
 Account.propTypes = {
     classes: PropTypes.object.isRequired
