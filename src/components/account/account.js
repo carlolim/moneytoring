@@ -7,17 +7,14 @@ import {
     ListItemText,
     Divider,
     Fab,
-    ListItemSecondaryAction,
-    IconButton,
     Typography, Backdrop
 } from "@material-ui/core";
 import MyToolbarWithNavigation from "../common/my-toolbar-with-navigation";
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from "@material-ui/icons/Delete"
 import CloseIcon from '@material-ui/icons/Close';
 import AccountIcon from "@material-ui/icons/AccountCircle";
 import Swap from "@material-ui/icons/SwapHoriz";
-import { selectAll } from "../../helpers";
+import { selectAll, formatMoney } from "../../helpers";
 
 const styles = {
     link: {
@@ -81,6 +78,7 @@ class Account extends Component {
                         <div key={index}>
                             <ListItem button onClick={() => this.props.history.push(`accounts/edit/${account.accountId}`)}>
                                 <ListItemText primary={account.name} secondary={account.accountId === 1 ? "This is the default account." : ""} />
+                                <Typography className="float-right">{account.trackBalance ? formatMoney(account.balance) : ''}</Typography>
                             </ListItem>
                             <Divider />
                         </div>

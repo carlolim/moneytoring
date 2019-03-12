@@ -81,7 +81,7 @@ class EditAccount extends Component {
             errors.name = true;
             hasError = true;
         }
-        if (data.trackBalance && (data.balance === 0 || isNaN(data.balance))) {
+        if (data.trackBalance && isNaN(data.balance)) {
             errors.balance = true;
             hasError = true;
         }
