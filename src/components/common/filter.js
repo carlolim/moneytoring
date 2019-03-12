@@ -89,9 +89,8 @@ class Filter extends Component {
                 case 'yearly':
                     filterTypeValue = { year: date.format('YYYY')};
                     break;
-                case 'custom':
+                default:
                     filterTypeValue = {from: moment(currentFilter.from).format('YYYY-MM-DD'), to: moment(currentFilter.to).format('YYYY-MM-DD')};
-                    break;
             }
             this.setState({...this.state, 
                 selectedAccounts: accounts, 

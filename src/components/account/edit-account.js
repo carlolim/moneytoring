@@ -6,7 +6,7 @@ import MyToolbar from "../common/my-toolbar";
 import IconButton from '@material-ui/core/IconButton';
 import Done from '@material-ui/icons/Done';
 import moment from "moment";
-import { formatMoney, selectById, insertAsync, updateAsync } from "../../helpers";
+import { formatMoney, selectById, updateAsync } from "../../helpers";
 
 const styles = {
 }

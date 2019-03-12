@@ -139,6 +139,25 @@ export const updateAsync = (table, data) => {
   });
 }
 
+export const updateBulk = (table, data) => {
+  return new Promise((resolve, reject) => {
+    let db = indexedDB.open("Moneytoring");
+    db.onsuccess = (event) => {
+      let tx = event.target.result.transaction([table], "readwrite");
+      let store = tx.objectStore(table);
+      for(var i=0;i<data.length;i++){
+        store.put(data[i]);
+      }
+      tx.oncomplete = (event) => {
+        resolve(true);
+      }
+      tx.onerror = (event) => {
+        reject(false);
+      }
+    }
+  });
+}
+
 export const remove = (table, id) => {
   return new Promise((resolve, reject) => {
     let db = indexedDB.open("Moneytoring");
