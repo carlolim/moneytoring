@@ -15,6 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import AccountIcon from "@material-ui/icons/AccountCircle";
 import Swap from "@material-ui/icons/SwapHoriz";
 import { selectAll, formatMoney } from "../../helpers";
+import { getMinStartDate } from "../../modules/account-module";
 
 const styles = {
     link: {
@@ -62,6 +63,8 @@ class Account extends Component {
 
     async componentDidMount() {
         var accounts = await selectAll("account");
+        var minStartDate = await getMinStartDate();
+        console.log(minStartDate);
         this.setState({ ...this.state, accounts });
     }
 

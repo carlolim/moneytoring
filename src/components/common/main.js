@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
+
 import Dashboard from '../dashboard/dashboard';
 import Expense from '../expense/expense';
 import NewExpense from '../expense/new-expense';
@@ -17,35 +18,37 @@ import DetailsBudget from '../budget/details-budget';
 import NewAccount from "../account/new-account";
 import EditAccount from "../account/edit-account";
 import Transfer from "../account/transfer";
+import BottomShortcuts from '../common/bottom-shortcuts';
 
 class Main extends Component {
     render() {
-      return (
-        <main>
-            <Switch>
-                <Route exact path='/' component={Dashboard}/>
-                <Route exact path='/expense' component={Expense}/>
-                <Route exact path='/expense/edit/:id' component={EditExpense} />
-                <Route exact path='/expense/new/:templateId' component={NewExpense} />
-                <Route exact path='/budget/edit/:id' component={EditBudget}/>
-                <Route exact path='/budget/new' component={NewBudget}/>
-                <Route exact path='/budget' component={Budget}/>
-                <Route exact path='/budget/details/:id' component={DetailsBudget} />
-                <Route exact path='/settings' component={Settings}/>
-                <Route exact path='/accounts' component={Account}/>
-                <Route exact path='/accounts/new' component={NewAccount}/>
-                <Route exact path='/accounts/edit/:id' component={EditAccount}/>
-                <Route exact path='/accounts/transfer' component={Transfer}/>
-                <Route exact path='/categories' component={Category}/>
-                <Route exact path='/expensetemplates/edit/:id' component={EditExpenseTemplate} />
-                <Route exact path='/expensetemplates/new' component={NewExpenseTemplate}/>
-                <Route exact path='/expensetemplates' component={ExpenseTemplate}/>
+        return (
+            <main>
+                <Switch>
+                    <Route exact path='/' component={Dashboard} />
+                    <Route exact path='/expense' component={Expense} />
+                    <Route exact path='/expense/edit/:id' component={EditExpense} />
+                    <Route exact path='/expense/new/:templateId' component={NewExpense} />
+                    <Route exact path='/budget/edit/:id' component={EditBudget} />
+                    <Route exact path='/budget/new' component={NewBudget} />
+                    <Route exact path='/budget' component={Budget} />
+                    <Route exact path='/budget/details/:id' component={DetailsBudget} />
+                    <Route exact path='/settings' component={Settings} />
+                    <Route exact path='/accounts' component={Account} />
+                    <Route exact path='/accounts/new' component={NewAccount} />
+                    <Route exact path='/accounts/edit/:id' component={EditAccount} />
+                    <Route exact path='/accounts/transfer' component={Transfer} />
+                    <Route exact path='/categories' component={Category} />
+                    <Route exact path='/expensetemplates/edit/:id' component={EditExpenseTemplate} />
+                    <Route exact path='/expensetemplates/new' component={NewExpenseTemplate} />
+                    <Route exact path='/expensetemplates' component={ExpenseTemplate} />
 
-            </Switch>
-        </main>
-      );
+                </Switch>
+                <BottomShortcuts />
+            </main>
+        );
     }
 }
-  
+
 
 export default Main

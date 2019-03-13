@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import NavigationLinks from "./navigation-links";
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
 const styles = {
   root: {
@@ -20,16 +22,39 @@ const styles = {
 };
 
 class MyToolbar extends Component {
-  render(){
+  state = {
+    isOpen: false
+  };
+
+  toggleDrawer = () => {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  };
+
+  render() {
     return (
       <div style={styles.root}>
+        <SwipeableDrawer
+          open={this.state.isOpen}
+          onClose={this.toggleDrawer}
+          onOpen={this.toggleDrawer}
+          disableBackdropTransition={true}>
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={this.toggleDrawer}
+            onKeyDown={this.toggleDrawer}>
+            <NavigationLinks />
+          </div>
+        </SwipeableDrawer>
         <AppBar position="fixed">
           <Toolbar>
-            {this.props.showBackButton ? 
+            {this.props.showBackButton ?
               <IconButton onClick={this.props.onBack} style={styles.menuButton} color="inherit" aria-label="Menu">
                 <ArrowBack />
               </IconButton>
-            : null}
+              : null}
             <Typography variant="h6" color="inherit" style={styles.grow}>
               {this.props.title}
             </Typography>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -32,7 +32,7 @@ class MyToolbarWithNavigation extends Component {
     });
   };
 
-  render(){
+  render() {
     return (
       <div style={styles.root}>
         <SwipeableDrawer
@@ -40,21 +40,21 @@ class MyToolbarWithNavigation extends Component {
           onClose={this.toggleDrawer}
           onOpen={this.toggleDrawer}
           disableBackdropTransition={true}>
-              <div
-                tabIndex={0}
-                role="button"
-                onClick={this.toggleDrawer}
-                onKeyDown={this.toggleDrawer}>
-                  <NavigationLinks />
-              </div>
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={this.toggleDrawer}
+            onKeyDown={this.toggleDrawer}>
+            <NavigationLinks />
+          </div>
         </SwipeableDrawer>
         <AppBar position="fixed">
           <Toolbar>
             <IconButton onClick={this.toggleDrawer} style={styles.menuButton} color="inherit" aria-label="Menu">
-                <MenuIcon />
+              <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" style={styles.grow}>
-                {this.props.title}
+              {this.props.title}
             </Typography>
             {this.props.buttons.map((item, index) => <span color="inherit" key={index}>{item}</span>)}
           </Toolbar>
