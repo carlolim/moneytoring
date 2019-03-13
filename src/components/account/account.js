@@ -78,7 +78,7 @@ class Account extends Component {
                         <div key={index}>
                             <ListItem button onClick={() => this.props.history.push(`accounts/edit/${account.accountId}`)}>
                                 <ListItemText primary={account.name} secondary={account.accountId === 1 ? "This is the default account." : ""} />
-                                <Typography className="float-right">{account.trackBalance ? formatMoney(account.balance) : ''}</Typography>
+                                <Typography className="float-right">{account.trackBalance ? formatMoney(account.balance) : "N/A" }</Typography>
                             </ListItem>
                             <Divider />
                         </div>
