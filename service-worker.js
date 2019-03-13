@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/moneytoring/precache-manifest.42b322851a11e1a174d5f56471427ceb.js"
+  "/moneytoring/precache-manifest.1831370972660cf060b1e926f988d538.js"
 );
 
 workbox.clientsClaim();

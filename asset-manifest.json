@@ -1,18 +1,18 @@
 {
   "main.css": "/moneytoring/static/css/main.7f38c589.chunk.css",
-  "main.js": "/moneytoring/static/js/main.10c8109e.chunk.js",
-  "main.js.map": "/moneytoring/static/js/main.10c8109e.chunk.js.map",
+  "main.js": "/moneytoring/static/js/main.09a67223.chunk.js",
+  "main.js.map": "/moneytoring/static/js/main.09a67223.chunk.js.map",
   "static/css/1.aad8a9e5.chunk.css": "/moneytoring/static/css/1.aad8a9e5.chunk.css",
   "static/js/1.8dca3504.chunk.js": "/moneytoring/static/js/1.8dca3504.chunk.js",
   "static/js/1.8dca3504.chunk.js.map": "/moneytoring/static/js/1.8dca3504.chunk.js.map",
   "runtime~main.js": "/moneytoring/static/js/runtime~main.9062f253.js",
   "runtime~main.js.map": "/moneytoring/static/js/runtime~main.9062f253.js.map",
-  "static/media/index.css": "/moneytoring/static/media/roboto-latin-900italic.bc833e72.woff",
+  "static/media/index.css": "/moneytoring/static/media/roboto-latin-900.8c2ade50.woff",
   "static/media/aplaya.png": "/moneytoring/static/media/aplaya.a75f6366.png",
   "static/media/thinking-meme.png": "/moneytoring/static/media/thinking-meme.a19dae0e.png",
-  "static/css/main.7f38c589.chunk.css.map": "/moneytoring/static/css/main.7f38c589.chunk.css.map",
   "static/css/1.aad8a9e5.chunk.css.map": "/moneytoring/static/css/1.aad8a9e5.chunk.css.map",
+  "static/css/main.7f38c589.chunk.css.map": "/moneytoring/static/css/main.7f38c589.chunk.css.map",
   "index.html": "/moneytoring/index.html",
-  "precache-manifest.42b322851a11e1a174d5f56471427ceb.js": "/moneytoring/precache-manifest.42b322851a11e1a174d5f56471427ceb.js",
+  "precache-manifest.1831370972660cf060b1e926f988d538.js": "/moneytoring/precache-manifest.1831370972660cf060b1e926f988d538.js",
   "service-worker.js": "/moneytoring/service-worker.js"
 }
