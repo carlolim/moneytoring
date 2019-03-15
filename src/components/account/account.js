@@ -14,8 +14,9 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import AccountIcon from "@material-ui/icons/AccountCircle";
 import Swap from "@material-ui/icons/SwapHoriz";
-import { selectAll, formatMoney } from "../../helpers";
-import { getMinStartDate } from "../../modules/account-module";
+import { selectAll, formatMoney, sumProperty } from "../../helpers";
+import { getMinStartDate, getAllUpdatedBalance } from "../../modules/account-module";
+import { getExpensesBetweenDates } from "../../modules/expense-module";
 
 const styles = {
     link: {
@@ -62,9 +63,7 @@ class Account extends Component {
     }
 
     async componentDidMount() {
-        var accounts = await selectAll("account");
-        var minStartDate = await getMinStartDate();
-        console.log(minStartDate);
+        var accounts = await getAllUpdatedBalance();
         this.setState({ ...this.state, accounts });
     }
 

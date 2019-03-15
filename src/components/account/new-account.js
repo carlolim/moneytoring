@@ -109,7 +109,7 @@ class NewAccount extends Component {
                         <>
                             <TextField
                                 error={this.state.errors.balance}
-                                label="Balance"
+                                label="Initial balance"
                                 value={this.state.balance}
                                 onChange={this.handleChangeProperty.bind(this, 'balance')}
                                 margin="normal"

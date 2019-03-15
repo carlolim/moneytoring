@@ -9,6 +9,7 @@ import {
     InputAdornment
 } from "@material-ui/core";
 import { selectAll, formatMoney, selectById, updateBulk } from "../../helpers";
+import { getAllUpdatedBalance } from "../../modules/account-module";
 
 const styles = {
     accountItem: {
@@ -44,7 +45,7 @@ class Transfer extends Component {
     }
 
     async componentDidMount() {
-        var accounts = await selectAll("account");
+        var accounts = await getAllUpdatedBalance();
         this.setState({ ...this.state, accounts });
     }
 

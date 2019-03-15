@@ -19,6 +19,7 @@ import NewAccount from "../account/new-account";
 import EditAccount from "../account/edit-account";
 import Transfer from "../account/transfer";
 import BottomShortcuts from '../common/bottom-shortcuts';
+import AccountAnalytits from "../account/account-analytits";
 
 class Main extends Component {
     render() {
@@ -37,6 +38,7 @@ class Main extends Component {
                     <Route exact path='/accounts' component={Account} />
                     <Route exact path='/accounts/new' component={NewAccount} />
                     <Route exact path='/accounts/edit/:id' component={EditAccount} />
+                    <Route exact path='/accounts/analytits/:id' component={AccountAnalytits} />
                     <Route exact path='/accounts/transfer' component={Transfer} />
                     <Route exact path='/categories' component={Category} />
                     <Route exact path='/expensetemplates/edit/:id' component={EditExpenseTemplate} />

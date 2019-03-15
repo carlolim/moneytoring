@@ -145,7 +145,7 @@ export const updateBulk = (table, data) => {
     db.onsuccess = (event) => {
       let tx = event.target.result.transaction([table], "readwrite");
       let store = tx.objectStore(table);
-      for(var i=0;i<data.length;i++){
+      for (var i = 0; i < data.length; i++) {
         store.put(data[i]);
       }
       tx.oncomplete = (event) => {
@@ -174,6 +174,12 @@ export const remove = (table, id) => {
     }
   });
 }
+
+export const sumProperty = function (items, prop) {
+  return items.reduce(function (a, b) {
+    return a + b[prop];
+  }, 0);
+};
 
 export const budgetRepeatEnum = {
   none: 0,

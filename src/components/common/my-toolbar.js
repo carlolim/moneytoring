@@ -4,8 +4,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBack from '@material-ui/icons/ArrowBack';
-import NavigationLinks from "./navigation-links";
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+// import NavigationLinks from "./navigation-links";
+// import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
 const styles = {
   root: {
@@ -35,19 +35,6 @@ class MyToolbar extends Component {
   render() {
     return (
       <div style={styles.root}>
-        <SwipeableDrawer
-          open={this.state.isOpen}
-          onClose={this.toggleDrawer}
-          onOpen={this.toggleDrawer}
-          disableBackdropTransition={true}>
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer}
-            onKeyDown={this.toggleDrawer}>
-            <NavigationLinks />
-          </div>
-        </SwipeableDrawer>
         <AppBar position="fixed">
           <Toolbar>
             {this.props.showBackButton ?
