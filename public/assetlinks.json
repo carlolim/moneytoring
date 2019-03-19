@@ -1,0 +1,14 @@
+---
+layout: none
+permalink: .well-known/assetlinkgs.json
+---
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.appmaker.zltwva",
+      "sha256_cert_fingerprints": ["05:22:E7:37:DE:2B:61:92:4A:64:AB:DF:D5:13:74:93:F3:EE:4A:DA:D6:2D:C8:50:B8:2C:1F:1C:C0:D5:AB:84"]
+    }
+  }
+]
