@@ -1,1 +1,3 @@
 include: [".well-known", ".nojekyll"]
+layout: none
+permalink: .well-known/assetlinks.json
