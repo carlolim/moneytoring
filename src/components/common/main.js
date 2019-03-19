@@ -18,7 +18,6 @@ import DetailsBudget from '../budget/details-budget';
 import NewAccount from "../account/new-account";
 import EditAccount from "../account/edit-account";
 import Transfer from "../account/transfer";
-import BottomShortcuts from '../common/bottom-shortcuts';
 import AccountAnalytits from "../account/account-analytits";
 
 class Main extends Component {
@@ -46,7 +45,6 @@ class Main extends Component {
                     <Route exact path='/expensetemplates' component={ExpenseTemplate} />
 
                 </Switch>
-                <BottomShortcuts />
             </main>
         );
     }

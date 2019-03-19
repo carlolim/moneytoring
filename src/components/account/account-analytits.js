@@ -8,7 +8,7 @@ import CanvasJSReact from '../../canvassjs/canvasjs.react';
 import MyToolbar from "../common/my-toolbar";
 import { getSingleUpdatedBalance } from "../../modules/account-module";
 
-const CanvasJS = CanvasJSReact.CanvasJS;
+//const CanvasJS = CanvasJSReact.CanvasJS;
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const styles = {
