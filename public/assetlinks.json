@@ -1,14 +1,14 @@
 ---
 layout: none
-permalink: .well-known/assetlinkgs.json
+permalink: /.well-known/assetlinks.json
 ---
 [
   {
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "xyz.appmaker.zltwva",
-      "sha256_cert_fingerprints": ["05:22:E7:37:DE:2B:61:92:4A:64:AB:DF:D5:13:74:93:F3:EE:4A:DA:D6:2D:C8:50:B8:2C:1F:1C:C0:D5:AB:84"]
+      "package_name": "xyz.appmaker.rvgttj",
+      "sha256_cert_fingerprints": ["9F:FE:8A:48:AD:CD:EC:79:D5:D0:B8:AB:79:03:93:CE:FA:B1:EC:04:90:4C:61:5B:D8:D6:E7:D7:47:BB:37:73", "A9:6A:B3:0C:60:65:DC:8A:B2:13:BE:0B:45:D6:14:92:52:97:C7:D0:67:F2:92:95:9B:33:66:66:B3:FC:A5:A1"]
     }
   }
 ]
