@@ -1,4 +1,6 @@
-# moneytoring [Demo](https://carlolim.github.io/moneytoring).
+# moneytoring 
+
+[Demo](https://carlolim.github.io/moneytoring).
 
 A progressive web app for tracking expenses and working on a budget.
 
